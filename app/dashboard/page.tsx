@@ -38,6 +38,24 @@ function LockIcon() {
   );
 }
 
+function DownloadIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" y1="15" x2="12" y2="3" />
+    </svg>
+  );
+}
+
+function SparkleIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 3L13.5 8.5L19 10L13.5 11.5L12 17L10.5 11.5L5 10L10.5 8.5L12 3Z" />
+    </svg>
+  );
+}
+
 /* ── Course data ────────────────────────────────────────────── */
 
 const COURSE_ROWS = [
@@ -94,6 +112,12 @@ const PLAN_LABEL: Record<string, string> = {
   creator: "Creator",
 };
 
+const PLAN_FEATURES: Record<string, string[]> = {
+  starter: ["50 créditos/mês", "Todos os 4 estilos de decalque", "Download em alta resolução"],
+  pro: ["130 créditos/mês", "Todos os 4 estilos de decalque", "Download em alta resolução", "Acesso antecipado a cursos"],
+  creator: ["210 créditos/mês", "Todos os 4 estilos de decalque", "Download em alta resolução", "Acesso antecipado a cursos", "Comunidade Pro exclusiva"],
+};
+
 /* ── Page ───────────────────────────────────────────────────── */
 
 export default async function DashboardPage() {
@@ -104,7 +128,11 @@ export default async function DashboardPage() {
   const email = user?.emailAddresses?.[0]?.emailAddress ?? null;
   const profile = await getOrCreateProfile(userId, email);
   const creditsAvailable = await getCreditsAvailable(profile);
-  const recentDecals = await getRecentDecals(userId, 5);
+  const recentDecals = await getRecentDecals(userId, 10);
+
+  const creditsPercent = profile.credits_total > 0
+    ? Math.round((profile.credits_used / profile.credits_total) * 100)
+    : 0;
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
@@ -120,7 +148,6 @@ export default async function DashboardPage() {
       >
         <div className="max-w-[1800px] mx-auto px-6 md:px-10 h-16 flex items-center justify-between">
 
-          {/* Logo */}
           <div className="flex items-center gap-3">
             <span className="text-[#22c55e] neon-text-sm float"><CrosshairIcon size={24} /></span>
             <div className="leading-none">
@@ -131,12 +158,9 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          {/* Nav */}
           <nav className="hidden md:flex items-center gap-7">
-            {["Início", "Cursos", "Em Alta", "Minha Lista"].map((label) => (
-              <a
-                key={label}
-                href="#"
+            {["Cursos", "Decalques", "Planos"].map((label) => (
+              <a key={label} href={`#${label.toLowerCase()}`}
                 className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/40 hover:text-[#22c55e] transition-colors duration-200"
               >
                 {label}
@@ -144,13 +168,13 @@ export default async function DashboardPage() {
             ))}
           </nav>
 
-          {/* Right: credits + user */}
           <div className="flex items-center gap-4">
             {profile.plan !== "free" && (
               <div
                 className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] text-[#22c55e] neon-text-sm"
                 style={{ border: "1px solid rgba(34,197,94,0.25)", background: "rgba(34,197,94,0.06)" }}
               >
+                <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
                 {creditsAvailable} créditos
               </div>
             )}
@@ -163,25 +187,17 @@ export default async function DashboardPage() {
       </header>
 
       {/* ── Hero banner ── */}
-      <section
-        className="relative flex items-end overflow-hidden pt-16"
-        style={{ minHeight: "78vh" }}
-      >
-        {/* BG layers */}
+      <section className="relative flex items-end overflow-hidden pt-16" style={{ minHeight: "78vh" }}>
         <div className="absolute inset-0 pointer-events-none">
-          <div
-            className="absolute right-0 top-0 w-[60vw] h-full glow-pulse"
+          <div className="absolute right-0 top-0 w-[60vw] h-full glow-pulse"
             style={{ background: "radial-gradient(ellipse at 70% 35%, rgba(34,197,94,0.14) 0%, transparent 65%)" }}
           />
-          <div
-            className="absolute inset-0"
+          <div className="absolute inset-0"
             style={{ background: "radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(0,0,0,0.75) 100%)" }}
           />
         </div>
 
-        {/* Grid */}
-        <div
-          className="absolute inset-0 pointer-events-none"
+        <div className="absolute inset-0 pointer-events-none"
           style={{
             backgroundImage: "linear-gradient(rgba(34,197,94,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(34,197,94,0.05) 1px,transparent 1px)",
             backgroundSize: "80px 80px",
@@ -189,29 +205,22 @@ export default async function DashboardPage() {
           }}
         />
 
-        {/* Bottom fade */}
-        <div
-          className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none"
+        <div className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none"
           style={{ background: "linear-gradient(to top, #0a0a0a 0%, transparent 100%)" }}
         />
 
         <div className="relative max-w-[1800px] mx-auto px-6 md:px-10 w-full pb-20">
           <div className="max-w-2xl">
-
-            {/* Tag */}
             <div className="flex items-center gap-3 mb-5">
               <span className="text-[#22c55e]/50"><CrosshairIcon size={14} /></span>
-              <span
-                className="text-[10px] font-bold uppercase tracking-[0.28em] px-3 py-1 neon-text-sm"
+              <span className="text-[10px] font-bold uppercase tracking-[0.28em] px-3 py-1 neon-text-sm"
                 style={{ color: "#22c55e", border: "1px solid rgba(34,197,94,0.25)", background: "rgba(34,197,94,0.08)" }}
               >
                 Em breve
               </span>
             </div>
 
-            {/* Heading */}
-            <h1
-              className="font-bebas glitch leading-[0.88] uppercase mb-4"
+            <h1 className="font-bebas glitch leading-[0.88] uppercase mb-4"
               style={{ fontSize: "clamp(3.5rem,7vw,7.5rem)" }}
             >
               DOMINE A{" "}
@@ -223,54 +232,44 @@ export default async function DashboardPage() {
               Cursos completos com os melhores tatuadores do Brasil. Blackwork, fineline, realismo e muito mais — em um só lugar.
             </p>
 
-            {/* Buttons */}
             <div className="flex items-center gap-3 flex-wrap">
-              <button
-                disabled
+              <button disabled
                 className="flex items-center gap-2 px-6 py-3 text-[11px] font-black uppercase tracking-[0.18em] cursor-not-allowed"
                 style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.3)", border: "1px solid rgba(255,255,255,0.08)" }}
               >
-                <LockIcon /> Em breve
+                <LockIcon /> Cursos em breve
               </button>
-              <button
-                disabled
-                className="flex items-center gap-2 px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.15em] cursor-not-allowed"
-                style={{ background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.25)", border: "1px solid rgba(255,255,255,0.06)" }}
-              >
-                Mais informações
-              </button>
+              {creditsAvailable > 0 && (
+                <Link href="/dashboard/decal"
+                  className="flex items-center gap-2 px-6 py-3 text-[11px] font-black uppercase tracking-[0.18em] border border-[#22c55e] text-[#22c55e] hover:bg-[#22c55e] hover:text-black transition-all duration-200 neon-border"
+                >
+                  <SparkleIcon size={14} /> Gerar decalque IA
+                </Link>
+              )}
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Content rows ── */}
-      <main className="relative pb-24 max-w-[1800px] mx-auto" style={{ marginTop: "-40px" }}>
+      {/* ── Content ── */}
+      <main id="cursos" className="relative pb-24 max-w-[1800px] mx-auto" style={{ marginTop: "-40px" }}>
 
+        {/* Course rows */}
         {COURSE_ROWS.map((row) => (
           <section key={row.title} className="mb-10 px-6 md:px-10">
             <h2 className="font-bebas text-xl tracking-[0.06em] text-white mb-3 uppercase">{row.title}</h2>
             <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
-              {row.courses.map((c, i) => (
+              {row.courses.map((c) => (
                 <div
                   key={c.id}
                   className="flex-none relative rounded overflow-hidden group cursor-pointer transition-all duration-300 hover:scale-105 hover:-translate-y-1"
-                  style={{
-                    width: "clamp(140px,12vw,190px)",
-                    aspectRatio: "2/3",
-                    background: c.bg,
-                    flexShrink: 0,
-                  }}
+                  style={{ width: "clamp(140px,12vw,190px)", aspectRatio: "2/3", background: c.bg, flexShrink: 0 }}
                 >
-                  {/* Pattern */}
                   <div className="absolute inset-0" style={{ backgroundImage: c.pattern, backgroundSize: c.patternSize }} />
-                  {/* Ambient wash */}
                   <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse at 50% 30%,${c.accent}12 0%,transparent 65%)` }} />
-                  {/* Ghost text */}
                   <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
                     <span className="font-bebas select-none text-center leading-none px-1" style={{ fontSize: "28px", color: `${c.accent}09`, transform: "rotate(-8deg) scale(1.5)" }}>{c.style}</span>
                   </div>
-                  {/* Info */}
                   <div className="absolute inset-0 flex flex-col justify-between p-2.5" style={{ background: "linear-gradient(to top,rgba(0,0,0,0.88) 0%,transparent 55%)" }}>
                     <div>{c.topN && (<span className="font-bebas text-[12px] w-5 h-5 flex items-center justify-center rounded-sm leading-none" style={{ background: c.accent, color: "#000" }}>{c.topN}</span>)}</div>
                     <div>
@@ -282,12 +281,10 @@ export default async function DashboardPage() {
                       </div>
                     </div>
                   </div>
-                  {/* Lock overlay */}
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5" style={{ background: "rgba(0,0,0,0.5)" }}>
                     <span style={{ color: "rgba(34,197,94,0.45)" }}><LockIcon /></span>
                     <span className="text-[7px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-full" style={{ background: "rgba(0,0,0,0.6)", color: "rgba(34,197,94,0.5)", border: "1px solid rgba(34,197,94,0.18)" }}>Em breve</span>
                   </div>
-                  {/* Hover ring */}
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded pointer-events-none" style={{ boxShadow: `0 0 0 1.5px ${c.accent}55, 0 0 18px ${c.accent}18` }} />
                 </div>
               ))}
@@ -295,20 +292,55 @@ export default async function DashboardPage() {
           </section>
         ))}
 
+        {/* ── Notificação de cursos ── */}
+        <section className="mx-6 md:mx-10 mb-8 px-7 py-5 rounded flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+          style={{ background: "rgba(34,197,94,0.03)", border: "1px solid rgba(34,197,94,0.08)" }}
+        >
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#22c55e]/60 mb-1">Biblioteca de cursos</p>
+            <p className="text-white/50 text-sm">Estamos preparando os primeiros cursos. Você será notificado assim que estiverem disponíveis.</p>
+          </div>
+          <div className="flex-none px-4 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-white/20"
+            style={{ border: "1px solid rgba(255,255,255,0.06)" }}
+          >
+            Notificação ativa ✓
+          </div>
+        </section>
+
         {/* ── Ferramenta IA ── */}
-        <section className="mx-6 md:mx-10 mt-6 mb-8 rounded overflow-hidden" style={{ background: "linear-gradient(135deg, #071209 0%, #0d0d0d 100%)", border: "1px solid rgba(34,197,94,0.15)" }}>
+        <section id="decalques" className="mx-6 md:mx-10 mt-2 mb-8 rounded overflow-hidden"
+          style={{ background: "linear-gradient(135deg, #071209 0%, #0d0d0d 100%)", border: "1px solid rgba(34,197,94,0.15)" }}
+        >
           <div className="px-8 py-7 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-[#22c55e]"><CrosshairIcon size={16} /></span>
                 <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-[#22c55e] neon-text-sm">Disponível agora</p>
               </div>
-              <h3 className="font-bebas text-3xl tracking-[0.04em] uppercase mb-1">Ferramenta de Decalque IA</h3>
-              <p className="text-[13px] text-white/40">Transforme qualquer foto em decalque pronto para tatuar. 1 crédito por uso.</p>
+              <h3 className="font-bebas text-3xl tracking-[0.04em] uppercase mb-1">Gerador de Decalque IA</h3>
+              <p className="text-[13px] text-white/40 mb-3">Transforme qualquer foto em stencil pronto para tatuar. Escolha entre 4 estilos únicos. 1 crédito por uso.</p>
+
+              {/* Style pills */}
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { name: "Espectro", desc: "Linhas puras" },
+                  { name: "Sombras", desc: "Com profundidade" },
+                  { name: "Cinzel", desc: "Estilo gravura" },
+                  { name: "Fantasma", desc: "Ultra-minimal" },
+                ].map((s) => (
+                  <span key={s.name}
+                    className="flex items-center gap-1.5 px-2.5 py-1 text-[10px] uppercase tracking-[0.14em]"
+                    style={{ background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.15)", color: "rgba(34,197,94,0.7)" }}
+                  >
+                    <span className="font-bold">{s.name}</span>
+                    <span className="text-white/20">·</span>
+                    <span className="text-white/30 font-normal normal-case tracking-normal">{s.desc}</span>
+                  </span>
+                ))}
+              </div>
             </div>
 
             <div className="flex flex-col items-start md:items-end gap-3 flex-none">
-              {/* Plan badge */}
               <div className="text-[10px] text-white/30 uppercase tracking-[0.18em]">
                 Plano: <span className="text-white/60 font-semibold">{PLAN_LABEL[profile.plan]}</span>
                 {creditsAvailable > 0 && (
@@ -316,16 +348,14 @@ export default async function DashboardPage() {
                 )}
               </div>
               {creditsAvailable > 0 ? (
-                <Link
-                  href="/dashboard/decal"
+                <Link href="/dashboard/decal"
                   className="flex items-center gap-2 px-6 py-3 text-[11px] font-black uppercase tracking-[0.18em] transition-all duration-200"
                   style={{ background: "#22c55e", color: "#000" }}
                 >
                   Gerar decalque <ArrowIcon />
                 </Link>
               ) : (
-                <button
-                  disabled
+                <button disabled
                   className="flex items-center gap-2 px-6 py-3 text-[11px] font-black uppercase tracking-[0.18em]"
                   style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.25)", border: "1px solid rgba(255,255,255,0.08)", cursor: "not-allowed" }}
                 >
@@ -340,14 +370,16 @@ export default async function DashboardPage() {
             <div className="px-8 pb-6">
               <div className="flex justify-between text-[9px] text-white/25 uppercase tracking-[0.18em] mb-1.5">
                 <span>{profile.credits_used} usados</span>
-                <span>{profile.credits_total} total</span>
+                <span>{creditsAvailable} restantes de {profile.credits_total}</span>
               </div>
               <div className="w-full h-1 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
                 <div
-                  className="h-1 rounded-full neon-border"
+                  className="h-1 rounded-full transition-all duration-500"
                   style={{
-                    width: `${Math.round((profile.credits_used / profile.credits_total) * 100)}%`,
-                    background: "linear-gradient(90deg,#16a34a,#22c55e)",
+                    width: `${creditsPercent}%`,
+                    background: creditsPercent > 80
+                      ? "linear-gradient(90deg,#dc2626,#ef4444)"
+                      : "linear-gradient(90deg,#16a34a,#22c55e)",
                   }}
                 />
               </div>
@@ -355,29 +387,192 @@ export default async function DashboardPage() {
           )}
         </section>
 
-        {/* ── Planos / Portal ── */}
-        <section className="mx-6 md:mx-10 mb-8">
+        {/* ── Histórico de decalques ── */}
+        {recentDecals.length > 0 && (
+          <section className="mx-6 md:mx-10 mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-bebas text-xl tracking-[0.06em] text-white uppercase">Histórico de Decalques</h2>
+              <Link href="/dashboard/decal"
+                className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#22c55e]/60 hover:text-[#22c55e] transition-colors"
+              >
+                Ver todos →
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-10 gap-2">
+              {recentDecals.map((job) => (
+                <div
+                  key={job.id}
+                  className="group relative overflow-hidden"
+                  style={{
+                    aspectRatio: "1/1",
+                    border: "1px solid rgba(255,255,255,0.06)",
+                    background: "rgba(255,255,255,0.02)",
+                  }}
+                >
+                  {job.status === "done" && job.output_url ? (
+                    <>
+                      <img
+                        src={job.output_url}
+                        alt="Decalque"
+                        className="w-full h-full object-contain p-1.5"
+                      />
+                      {/* hover overlay with download */}
+                      <div
+                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center gap-1"
+                        style={{ background: "rgba(0,0,0,0.75)" }}
+                      >
+                        <a
+                          href={job.output_url}
+                          download={`decalque-${job.id}.png`}
+                          className="p-1.5 border border-[#22c55e]/60 text-[#22c55e] hover:bg-[#22c55e] hover:text-black transition-all"
+                          title="Baixar"
+                        >
+                          <DownloadIcon />
+                        </a>
+                        <span className="text-[7px] text-white/40 uppercase tracking-wider">
+                          {new Date(job.created_at).toLocaleDateString("pt-BR")}
+                        </span>
+                      </div>
+                      {/* done badge */}
+                      <div className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-[#22c55e]"
+                        style={{ boxShadow: "0 0 4px rgba(34,197,94,0.8)" }}
+                      />
+                    </>
+                  ) : job.status === "processing" ? (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <div className="w-4 h-4 border border-[#22c55e]/40 border-t-[#22c55e] rounded-full animate-spin" />
+                    </div>
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <span className="text-[8px] text-red-400/40 uppercase tracking-wider">Erro</span>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* ── Créditos detalhado ── */}
+        {profile.credits_total > 0 && (
+          <section className="mx-6 md:mx-10 mb-8">
+            <h2 className="font-bebas text-xl tracking-[0.06em] text-white mb-4 uppercase">Seus Créditos</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {/* Total */}
+              <div className="p-5 rounded"
+                style={{ background: "rgba(34,197,94,0.04)", border: "1px solid rgba(34,197,94,0.1)" }}
+              >
+                <p className="text-[9px] font-bold uppercase tracking-[0.22em] text-white/25 mb-2">Total do plano</p>
+                <p className="font-bebas text-4xl text-[#22c55e] neon-text-sm leading-none mb-1">{profile.credits_total}</p>
+                <p className="text-[11px] text-white/25">créditos / mês</p>
+              </div>
+              {/* Usados */}
+              <div className="p-5 rounded"
+                style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
+              >
+                <p className="text-[9px] font-bold uppercase tracking-[0.22em] text-white/25 mb-2">Utilizados</p>
+                <p className="font-bebas text-4xl text-white/60 leading-none mb-1">{profile.credits_used}</p>
+                <p className="text-[11px] text-white/25">{creditsPercent}% do total</p>
+              </div>
+              {/* Restantes */}
+              <div className="p-5 rounded"
+                style={{
+                  background: creditsAvailable === 0 ? "rgba(239,68,68,0.04)" : "rgba(34,197,94,0.04)",
+                  border: creditsAvailable === 0 ? "1px solid rgba(239,68,68,0.1)" : "1px solid rgba(34,197,94,0.1)",
+                }}
+              >
+                <p className="text-[9px] font-bold uppercase tracking-[0.22em] text-white/25 mb-2">Disponíveis</p>
+                <p
+                  className="font-bebas text-4xl leading-none mb-1 neon-text-sm"
+                  style={{ color: creditsAvailable === 0 ? "#f87171" : "#22c55e" }}
+                >
+                  {creditsAvailable}
+                </p>
+                <p className="text-[11px] text-white/25">créditos restantes</p>
+              </div>
+            </div>
+
+            {/* Barra de progresso */}
+            <div className="mt-3 px-5 py-4 rounded"
+              style={{ background: "rgba(255,255,255,0.015)", border: "1px solid rgba(255,255,255,0.05)" }}
+            >
+              <div className="flex justify-between text-[9px] text-white/25 uppercase tracking-[0.16em] mb-2">
+                <span>0</span>
+                <span>{profile.credits_total} créditos</span>
+              </div>
+              <div className="relative w-full h-2 rounded-full" style={{ background: "rgba(255,255,255,0.05)" }}>
+                <div
+                  className="absolute top-0 left-0 h-2 rounded-full transition-all duration-700"
+                  style={{
+                    width: `${creditsPercent}%`,
+                    background: creditsPercent > 80
+                      ? "linear-gradient(90deg,#7f1d1d,#ef4444)"
+                      : creditsPercent > 50
+                      ? "linear-gradient(90deg,#16a34a,#22c55e)"
+                      : "linear-gradient(90deg,#15803d,#22c55e)",
+                    boxShadow: creditsPercent > 0 ? "0 0 8px rgba(34,197,94,0.4)" : "none",
+                  }}
+                />
+              </div>
+              {profile.plan_expires_at && (
+                <p className="text-[9px] text-white/20 mt-2 text-right uppercase tracking-[0.14em]">
+                  Renova em {new Date(profile.plan_expires_at).toLocaleDateString("pt-BR")}
+                </p>
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* ── Planos ── */}
+        <section id="planos" className="mx-6 md:mx-10 mb-8">
           {profile.plan === "free" ? (
             <>
-              <h2 className="font-bebas text-xl tracking-[0.06em] text-white mb-4 uppercase">Escolha seu plano</h2>
+              <div className="flex items-center gap-3 mb-5">
+                <h2 className="font-bebas text-xl tracking-[0.06em] text-white uppercase">Escolha seu plano</h2>
+                <div className="h-px flex-1" style={{ background: "linear-gradient(90deg, rgba(34,197,94,0.15), transparent)" }} />
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                {(["starter", "pro", "creator"] as const).map((plan) => {
+                {(["starter", "pro", "creator"] as const).map((plan, i) => {
                   const config = STRIPE_PLANS[plan];
+                  const isPro = plan === "pro";
                   return (
                     <form key={plan} action={createCheckoutSession.bind(null, plan)}>
                       <button
                         type="submit"
-                        className="w-full text-left p-5 rounded transition-all duration-200 hover:scale-[1.01] active:scale-[0.99]"
-                        style={{ background: "rgba(34,197,94,0.04)", border: "1px solid rgba(34,197,94,0.12)" }}
+                        className="w-full text-left p-6 rounded transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] relative overflow-hidden"
+                        style={{
+                          background: isPro ? "rgba(34,197,94,0.07)" : "rgba(34,197,94,0.03)",
+                          border: isPro ? "1px solid rgba(34,197,94,0.35)" : "1px solid rgba(34,197,94,0.1)",
+                          boxShadow: isPro ? "0 0 24px rgba(34,197,94,0.08)" : "none",
+                        }}
                       >
-                        <div className="flex items-center justify-between mb-3">
-                          <span className="font-bebas text-xl tracking-[0.06em] text-white">{config.name}</span>
-                          <span className="text-[10px] font-bold text-[#22c55e] uppercase tracking-widest">{config.credits} créditos/mês</span>
+                        {isPro && (
+                          <div className="absolute top-4 right-4 px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.2em]"
+                            style={{ background: "rgba(34,197,94,0.15)", color: "#22c55e", border: "1px solid rgba(34,197,94,0.3)" }}
+                          >
+                            Mais popular
+                          </div>
+                        )}
+                        <div className="mb-4">
+                          <span className="font-bebas text-2xl tracking-[0.06em] text-white">{config.name}</span>
+                          <div className="text-3xl font-black text-white mt-1">{config.price}</div>
+                          <p className="text-[11px] text-[#22c55e] mt-1 font-semibold">{config.credits} créditos/mês</p>
                         </div>
-                        <div className="text-2xl font-black text-white mb-3">{config.price}</div>
+                        <ul className="space-y-2 mb-5">
+                          {PLAN_FEATURES[plan].map(f => (
+                            <li key={f} className="flex items-center gap-2 text-[11px] text-white/40">
+                              <span className="text-[#22c55e] text-[10px]">✓</span> {f}
+                            </li>
+                          ))}
+                        </ul>
                         <div
-                          className="w-full py-2 text-center text-[11px] font-black uppercase tracking-[0.16em] text-black"
-                          style={{ background: "#22c55e" }}
+                          className="w-full py-2.5 text-center text-[11px] font-black uppercase tracking-[0.16em] transition-colors"
+                          style={{
+                            background: isPro ? "#22c55e" : "rgba(34,197,94,0.1)",
+                            color: isPro ? "#000" : "#22c55e",
+                            border: isPro ? "none" : "1px solid rgba(34,197,94,0.25)",
+                          }}
                         >
                           Assinar {config.name}
                         </div>
@@ -415,36 +610,6 @@ export default async function DashboardPage() {
             </div>
           )}
         </section>
-
-        {/* ── Histórico ── */}
-        {recentDecals.length > 0 && (
-          <section className="mx-6 md:mx-10 mb-8">
-            <h2 className="font-bebas text-xl tracking-[0.06em] text-white mb-3 uppercase">Histórico de Decalques</h2>
-            <div className="rounded overflow-hidden" style={{ border: "1px solid rgba(34,197,94,0.08)", background: "rgba(0,0,0,0.3)" }}>
-              {recentDecals.map((job, i) => (
-                <div
-                  key={job.id}
-                  className="flex items-center justify-between px-6 py-3"
-                  style={{ borderTop: i > 0 ? "1px solid rgba(255,255,255,0.04)" : "none" }}
-                >
-                  <span className="text-[12px] text-white/40">{new Date(job.created_at).toLocaleDateString("pt-BR")}</span>
-                  <span
-                    className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full"
-                    style={
-                      job.status === "done"
-                        ? { background: "rgba(34,197,94,0.1)", color: "#22c55e", border: "1px solid rgba(34,197,94,0.2)" }
-                        : job.status === "failed"
-                        ? { background: "rgba(239,68,68,0.1)", color: "#f87171", border: "1px solid rgba(239,68,68,0.2)" }
-                        : { background: "rgba(234,179,8,0.1)", color: "#facc15", border: "1px solid rgba(234,179,8,0.2)" }
-                    }
-                  >
-                    {job.status}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
       </main>
 
       <footer className="py-6 px-6 md:px-10" style={{ borderTop: "1px solid rgba(34,197,94,0.06)" }}>

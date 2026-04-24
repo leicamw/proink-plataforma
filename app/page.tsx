@@ -185,13 +185,18 @@ export default async function HomePage() {
 
           {/* Nav */}
           <nav className="hidden md:flex items-center gap-8">
-            {["Plataforma", "Cursos", "Planos"].map((label, i) => (
+            {[
+              { label: "Plataforma", href: "#plataforma" },
+              { label: "Cursos", href: "#cursos" },
+              { label: "Decalque IA", href: "#planos" },
+              { label: "Planos", href: "#planos" },
+            ].map((item) => (
               <a
-                key={label}
-                href={`#${label.toLowerCase()}`}
+                key={item.label}
+                href={item.href}
                 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/40 hover:text-[#22c55e] transition-colors duration-200"
               >
-                {label}
+                {item.label}
               </a>
             ))}
           </nav>
@@ -567,23 +572,332 @@ export default async function HomePage() {
       </section>
 
       {/* ══════════════════════════════════════════
-          SECTION 4 — CTA FINAL
+          SECTION 4 — DECALQUE IA (destaque)
       ══════════════════════════════════════════ */}
-      <section id="planos" className="py-36 px-6 md:px-10 relative overflow-hidden">
+      <section className="py-28 px-6 md:px-10 relative overflow-hidden" style={{ background: "#070a08" }}>
 
-        {/* Big center glow */}
-        <div
-          className="absolute inset-0 pointer-events-none glow-pulse"
-          style={{ background: "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(34,197,94,0.09) 0%, transparent 70%)" }}
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse 60% 70% at 50% 50%, rgba(34,197,94,0.06) 0%, transparent 70%)" }}
         />
-        {/* Decorative crosshairs */}
-        <div className="absolute top-16 left-14 text-[#22c55e]/[0.06] hidden lg:block float"><CrosshairIcon size={90} /></div>
-        <div className="absolute bottom-16 right-14 text-[#22c55e]/[0.06] hidden lg:block float" style={{ animationDelay: "2s" }}><CrosshairIcon size={65} /></div>
+        <div className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: "linear-gradient(rgba(34,197,94,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(34,197,94,0.04) 1px,transparent 1px)",
+            backgroundSize: "60px 60px",
+            maskImage: "radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 90%)",
+          }}
+        />
 
-        {/* Horizontal accent lines */}
-        <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 pointer-events-none hidden lg:block">
-          <div className="h-px w-full" style={{ background: "linear-gradient(90deg,transparent 0%,rgba(34,197,94,0.07) 20%,rgba(34,197,94,0.07) 80%,transparent 100%)" }} />
+        <div className="max-w-[1400px] mx-auto relative">
+          <ScrollReveal>
+            <div className="flex items-center gap-3 mb-6">
+              <span className="text-[#22c55e]/40"><CrosshairIcon size={14} /></span>
+              <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#22c55e] neon-text-sm">Disponível agora</p>
+            </div>
+          </ScrollReveal>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <ScrollReveal delay={60}>
+                <h2 className="font-bebas leading-[0.88] uppercase mb-5"
+                  style={{ fontSize: "clamp(2.8rem,5.5vw,6rem)" }}
+                >
+                  IA QUE GERA{" "}
+                  <span className="text-[#22c55e] neon-text">DECALQUES</span>{" "}
+                  EM SEGUNDOS.
+                </h2>
+              </ScrollReveal>
+              <ScrollReveal delay={120}>
+                <p className="text-white/40 text-[14px] leading-relaxed mb-8 max-w-md">
+                  Envie qualquer foto ou referência e escolha entre 4 estilos exclusivos. A IA converte em stencil profissional pronto para impressão e transferência.
+                </p>
+              </ScrollReveal>
+
+              <ScrollReveal delay={160}>
+                <div className="grid grid-cols-2 gap-3 mb-8">
+                  {[
+                    { name: "Espectro", desc: "Linhas puras de contorno" },
+                    { name: "Sombras", desc: "Profundidade com hachura" },
+                    { name: "Cinzel", desc: "Entalhado em chapa de cobre" },
+                    { name: "Fantasma", desc: "Ultra-minimalista e etéreo" },
+                  ].map((s, i) => (
+                    <div key={s.name}
+                      className="px-4 py-3"
+                      style={{
+                        background: "rgba(34,197,94,0.04)",
+                        border: "1px solid rgba(34,197,94,0.12)",
+                      }}
+                    >
+                      <p className="font-bebas text-[17px] text-[#22c55e] tracking-[0.05em] leading-none mb-0.5">{s.name}</p>
+                      <p className="text-[10px] text-white/30">{s.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </ScrollReveal>
+
+              <ScrollReveal delay={200}>
+                <Link
+                  href="/sign-up"
+                  className="inline-flex items-center gap-2 px-7 py-3.5 text-[12px] font-black uppercase tracking-[0.18em] bg-[#22c55e] text-black hover:bg-[#16a34a] transition-all duration-200 neon-border"
+                >
+                  Criar conta e usar a ferramenta <ArrowIcon />
+                </Link>
+              </ScrollReveal>
+            </div>
+
+            {/* Visual mockup */}
+            <ScrollReveal delay={80} className="relative">
+              <div className="relative mx-auto"
+                style={{
+                  maxWidth: "400px",
+                  border: "1px solid rgba(34,197,94,0.2)",
+                  background: "rgba(0,0,0,0.5)",
+                  boxShadow: "0 0 60px rgba(34,197,94,0.08)",
+                }}
+              >
+                {/* Top bar */}
+                <div className="flex items-center justify-between px-5 py-3"
+                  style={{ borderBottom: "1px solid rgba(34,197,94,0.1)", background: "rgba(34,197,94,0.03)" }}
+                >
+                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#22c55e]">Gerador de Decalque IA</span>
+                  <span className="text-[9px] text-white/25 uppercase tracking-[0.15em]">1 crédito</span>
+                </div>
+
+                {/* Body */}
+                <div className="p-6 space-y-4">
+                  {/* Style selector mockup */}
+                  <div>
+                    <p className="text-[9px] text-white/25 uppercase tracking-[0.2em] mb-2">Estilo do decalque</p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {[
+                        { name: "Espectro", active: true },
+                        { name: "Sombras", active: false },
+                        { name: "Cinzel", active: false },
+                        { name: "Fantasma", active: false },
+                      ].map(s => (
+                        <div key={s.name}
+                          className="px-3 py-2 text-[10px] font-semibold"
+                          style={{
+                            background: s.active ? "rgba(34,197,94,0.08)" : "rgba(255,255,255,0.02)",
+                            border: s.active ? "1px solid rgba(34,197,94,0.5)" : "1px solid rgba(255,255,255,0.06)",
+                            color: s.active ? "#22c55e" : "rgba(255,255,255,0.3)",
+                          }}
+                        >
+                          {s.name}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Upload zone mockup */}
+                  <div className="flex items-center justify-center py-8"
+                    style={{ border: "1px dashed rgba(34,197,94,0.25)", background: "rgba(255,255,255,0.01)" }}
+                  >
+                    <div className="text-center">
+                      <div className="text-[#22c55e]/30 mb-2 flex justify-center">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
+                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                          <polyline points="17 8 12 3 7 8" />
+                          <line x1="12" y1="3" x2="12" y2="15" />
+                        </svg>
+                      </div>
+                      <p className="text-[10px] text-white/30">Arraste ou clique para enviar</p>
+                    </div>
+                  </div>
+
+                  {/* Button mockup */}
+                  <div className="w-full py-3 text-center text-[11px] font-black uppercase tracking-[0.15em] text-[#22c55e]"
+                    style={{ border: "1px solid rgba(34,197,94,0.4)" }}
+                  >
+                    Gerar Decalque · 1 crédito
+                  </div>
+                </div>
+
+                {/* Corner brackets */}
+                <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[#22c55e]" />
+                <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-[#22c55e]" />
+                <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-[#22c55e]" />
+                <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[#22c55e]" />
+              </div>
+            </ScrollReveal>
+          </div>
         </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
+          SECTION 5 — PLANOS E PREÇOS
+      ══════════════════════════════════════════ */}
+      <section id="planos" className="py-32 px-6 md:px-10 relative overflow-hidden">
+
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(34,197,94,0.05) 0%, transparent 70%)" }}
+        />
+        <div className="absolute top-16 left-14 text-[#22c55e]/[0.04] hidden lg:block float"><CrosshairIcon size={90} /></div>
+        <div className="absolute bottom-16 right-14 text-[#22c55e]/[0.04] hidden lg:block float" style={{ animationDelay: "2s" }}><CrosshairIcon size={65} /></div>
+
+        <div className="max-w-[1400px] mx-auto relative">
+
+          <ScrollReveal>
+            <div className="flex items-center gap-3 mb-6">
+              <span className="text-[#22c55e]/40"><CrosshairIcon size={14} /></span>
+              <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#22c55e] neon-text-sm">Planos e preços</p>
+            </div>
+          </ScrollReveal>
+
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-14">
+            <ScrollReveal delay={60}>
+              <h2 className="font-bebas leading-[0.88] uppercase"
+                style={{ fontSize: "clamp(2.8rem,5.5vw,6rem)" }}
+              >
+                INVISTA NA SUA{" "}
+                <span className="text-[#22c55e] neon-text">EVOLUÇÃO.</span>
+              </h2>
+            </ScrollReveal>
+            <ScrollReveal delay={120}>
+              <p className="text-white/35 text-[14px] max-w-sm leading-relaxed">
+                Escolha o plano ideal para seu estúdio. Cancele a qualquer momento — sem fidelidade.
+              </p>
+            </ScrollReveal>
+          </div>
+
+          {/* Pricing grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+            {[
+              {
+                name: "Starter",
+                price: "R$ 49",
+                period: "/mês",
+                credits: "50 créditos/mês",
+                highlight: false,
+                badge: null,
+                features: [
+                  { text: "50 gerações de decalque/mês", ok: true },
+                  { text: "4 estilos de decalque IA", ok: true },
+                  { text: "Download em alta resolução", ok: true },
+                  { text: "Acesso à comunidade", ok: true },
+                  { text: "Acesso antecipado a cursos", ok: false },
+                  { text: "Comunidade Pro exclusiva", ok: false },
+                ],
+              },
+              {
+                name: "Pro",
+                price: "R$ 97",
+                period: "/mês",
+                credits: "130 créditos/mês",
+                highlight: true,
+                badge: "Mais popular",
+                features: [
+                  { text: "130 gerações de decalque/mês", ok: true },
+                  { text: "4 estilos de decalque IA", ok: true },
+                  { text: "Download em alta resolução", ok: true },
+                  { text: "Acesso à comunidade", ok: true },
+                  { text: "Acesso antecipado a cursos", ok: true },
+                  { text: "Comunidade Pro exclusiva", ok: false },
+                ],
+              },
+              {
+                name: "Creator",
+                price: "R$ 147",
+                period: "/mês",
+                credits: "210 créditos/mês",
+                highlight: false,
+                badge: "Para estúdios",
+                features: [
+                  { text: "210 gerações de decalque/mês", ok: true },
+                  { text: "4 estilos de decalque IA", ok: true },
+                  { text: "Download em alta resolução", ok: true },
+                  { text: "Acesso à comunidade", ok: true },
+                  { text: "Acesso antecipado a cursos", ok: true },
+                  { text: "Comunidade Pro exclusiva", ok: true },
+                ],
+              },
+            ].map((plan, i) => (
+              <ScrollReveal key={plan.name} delay={i * 100}>
+                <div
+                  className="relative flex flex-col h-full p-7 rounded transition-all duration-300 hover:scale-[1.01]"
+                  style={{
+                    background: plan.highlight ? "rgba(34,197,94,0.07)" : "rgba(255,255,255,0.02)",
+                    border: plan.highlight ? "1px solid rgba(34,197,94,0.4)" : "1px solid rgba(255,255,255,0.07)",
+                    boxShadow: plan.highlight ? "0 0 40px rgba(34,197,94,0.1)" : "none",
+                  }}
+                >
+                  {plan.badge && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 text-[9px] font-black uppercase tracking-[0.2em]"
+                      style={{
+                        background: plan.highlight ? "#22c55e" : "rgba(34,197,94,0.12)",
+                        color: plan.highlight ? "#000" : "#22c55e",
+                        border: plan.highlight ? "none" : "1px solid rgba(34,197,94,0.3)",
+                      }}
+                    >
+                      {plan.badge}
+                    </div>
+                  )}
+
+                  <div className="mb-6">
+                    <p className="font-bebas text-2xl tracking-[0.06em] text-white mb-1">{plan.name}</p>
+                    <div className="flex items-baseline gap-0.5">
+                      <span className="font-black text-4xl text-white">{plan.price}</span>
+                      <span className="text-white/30 text-sm">{plan.period}</span>
+                    </div>
+                    <p className="text-[11px] text-[#22c55e] mt-1 font-semibold">{plan.credits}</p>
+                  </div>
+
+                  <ul className="space-y-3 mb-8 flex-1">
+                    {plan.features.map((f) => (
+                      <li key={f.text} className="flex items-start gap-2.5 text-[12px]"
+                        style={{ color: f.ok ? "rgba(255,255,255,0.55)" : "rgba(255,255,255,0.18)" }}
+                      >
+                        <span className="mt-0.5 flex-none text-[11px]" style={{ color: f.ok ? "#22c55e" : "rgba(255,255,255,0.15)" }}>
+                          {f.ok ? "✓" : "×"}
+                        </span>
+                        {f.text}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <Link
+                    href="/sign-up"
+                    className="block w-full py-3 text-center text-[11px] font-black uppercase tracking-[0.18em] transition-all duration-200"
+                    style={{
+                      background: plan.highlight ? "#22c55e" : "rgba(34,197,94,0.08)",
+                      color: plan.highlight ? "#000" : "#22c55e",
+                      border: plan.highlight ? "none" : "1px solid rgba(34,197,94,0.25)",
+                    }}
+                  >
+                    Começar com {plan.name}
+                  </Link>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+
+          {/* FAQ / Garantia */}
+          <ScrollReveal delay={160}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-px"
+              style={{ background: "rgba(34,197,94,0.06)" }}
+            >
+              {[
+                { title: "Cancele quando quiser", desc: "Sem fidelidade. Cancele pela sua conta a qualquer momento, sem burocracia." },
+                { title: "Créditos mensais", desc: "Os créditos renovam todo mês. Créditos não utilizados não acumulam para o mês seguinte." },
+                { title: "Pagamento seguro", desc: "Pagamentos processados pela Stripe com criptografia de ponta a ponta." },
+              ].map((item) => (
+                <div key={item.title} className="bg-[#0a0a0a] px-7 py-6">
+                  <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#22c55e] mb-2">{item.title}</p>
+                  <p className="text-[12px] text-white/30 leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
+          SECTION 6 — CTA FINAL
+      ══════════════════════════════════════════ */}
+      <section className="py-32 px-6 md:px-10 relative overflow-hidden" style={{ background: "#060808" }}>
+
+        <div className="absolute inset-0 pointer-events-none glow-pulse"
+          style={{ background: "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(34,197,94,0.08) 0%, transparent 70%)" }}
+        />
 
         <div className="max-w-[1400px] mx-auto relative text-center">
           <ScrollReveal>
@@ -595,8 +909,7 @@ export default async function HomePage() {
           </ScrollReveal>
 
           <ScrollReveal delay={80}>
-            <h2
-              className="font-bebas leading-[0.84] uppercase mx-auto mb-6"
+            <h2 className="font-bebas leading-[0.84] uppercase mx-auto mb-6"
               style={{ fontSize: "clamp(3.5rem,9vw,10rem)", maxWidth: "920px" }}
             >
               PRONTO PARA<br />
@@ -607,7 +920,7 @@ export default async function HomePage() {
 
           <ScrollReveal delay={160}>
             <p className="text-white/35 text-[15px] max-w-[420px] mx-auto mb-12 leading-relaxed">
-              Crie sua conta grátis e seja um dos primeiros a acessar quando a plataforma entrar ao ar.
+              Crie sua conta grátis e comece a usar o gerador de decalques IA agora mesmo.
             </p>
           </ScrollReveal>
 
@@ -632,15 +945,42 @@ export default async function HomePage() {
       {/* ══════════════════════════════════════════
           FOOTER
       ══════════════════════════════════════════ */}
-      <footer className="py-8 px-6 md:px-10" style={{ borderTop: "1px solid rgba(34,197,94,0.06)" }}>
-        <div className="max-w-[1400px] mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-[#22c55e]/60"><CrosshairIcon size={18} /></span>
-            <span className="font-bebas text-[18px] tracking-[0.05em]">
-              Pro <span className="text-[#22c55e]">Ink</span>
-            </span>
+      <footer className="py-10 px-6 md:px-10" style={{ borderTop: "1px solid rgba(34,197,94,0.06)" }}>
+        <div className="max-w-[1400px] mx-auto">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-8">
+            <div className="flex items-center gap-3">
+              <span className="text-[#22c55e]/60"><CrosshairIcon size={20} /></span>
+              <div className="leading-none">
+                <div className="font-bebas text-[20px] tracking-[0.05em]">
+                  Pro <span className="text-[#22c55e]">Ink</span>
+                </div>
+                <div className="text-[8px] text-white/20 uppercase tracking-[0.2em]">Tattoo Platform</div>
+              </div>
+            </div>
+            <nav className="flex flex-wrap gap-6">
+              {[
+                { label: "Plataforma", href: "#plataforma" },
+                { label: "Cursos", href: "#cursos" },
+                { label: "Planos", href: "#planos" },
+                { label: "Criar conta", href: "/sign-up" },
+              ].map(l => (
+                <a key={l.label} href={l.href}
+                  className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/25 hover:text-[#22c55e] transition-colors"
+                >
+                  {l.label}
+                </a>
+              ))}
+            </nav>
           </div>
-          <p className="text-[10px] text-white/18 uppercase tracking-[0.15em]">© 2026 Pro Ink. Todos os direitos reservados.</p>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pt-6"
+            style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}
+          >
+            <p className="text-[10px] text-white/18 uppercase tracking-[0.15em]">© 2026 Pro Ink. Todos os direitos reservados.</p>
+            <div className="flex gap-4">
+              <a href="#" className="text-[10px] text-white/18 hover:text-white/40 transition-colors uppercase tracking-[0.15em]">Termos</a>
+              <a href="#" className="text-[10px] text-white/18 hover:text-white/40 transition-colors uppercase tracking-[0.15em]">Privacidade</a>
+            </div>
+          </div>
         </div>
       </footer>
 

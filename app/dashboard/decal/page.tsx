@@ -47,6 +47,93 @@ function SparkleIcon() {
   )
 }
 
+/* ── Estilos de decalque ─────────────────────────────────────── */
+
+type DecalStyleId = 'espectro' | 'sombras' | 'cinzel' | 'fantasma'
+
+interface DecalStyle {
+  id: DecalStyleId
+  name: string
+  tagline: string
+  description: string
+  preview: React.ReactNode
+}
+
+const DECAL_STYLES: DecalStyle[] = [
+  {
+    id: 'espectro',
+    name: 'Espectro',
+    tagline: 'Linhas puras de contorno',
+    description: 'Stencil clássico com linhas de contorno limpas e precisas. Ideal para qualquer estilo.',
+    preview: (
+      <svg viewBox="0 0 60 60" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-10 h-10">
+        <circle cx="30" cy="22" r="10" />
+        <path d="M20 40 Q30 32 40 40" />
+        <ellipse cx="30" cy="44" rx="12" ry="4" />
+        <circle cx="26" cy="20" r="1.5" />
+        <circle cx="34" cy="20" r="1.5" />
+        <path d="M26 27 Q30 30 34 27" />
+      </svg>
+    ),
+  },
+  {
+    id: 'sombras',
+    name: 'Sombras',
+    tagline: 'Profundidade com hachura fina',
+    description: 'Linhas de contorno combinadas com hachura direcional nas áreas de sombra. Dá volume ao design.',
+    preview: (
+      <svg viewBox="0 0 60 60" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-10 h-10">
+        <circle cx="30" cy="22" r="10" />
+        <path d="M20 40 Q30 32 40 40" />
+        <ellipse cx="30" cy="44" rx="12" ry="4" />
+        {/* hachura lateral direita */}
+        <line x1="36" y1="15" x2="38" y2="19" strokeWidth="0.7" />
+        <line x1="37" y1="18" x2="39" y2="22" strokeWidth="0.7" />
+        <line x1="38" y1="21" x2="40" y2="25" strokeWidth="0.7" />
+        <line x1="37" y1="24" x2="39" y2="28" strokeWidth="0.7" />
+        <line x1="35" y1="27" x2="37" y2="31" strokeWidth="0.7" />
+        {/* hachura base */}
+        <line x1="20" y1="41" x2="22" y2="44" strokeWidth="0.7" />
+        <line x1="23" y1="42" x2="25" y2="45" strokeWidth="0.7" />
+        <line x1="26" y1="42.5" x2="28" y2="45.5" strokeWidth="0.7" />
+      </svg>
+    ),
+  },
+  {
+    id: 'cinzel',
+    name: 'Cinzel',
+    tagline: 'Entalhado em chapa de cobre',
+    description: 'Reticulado cruzado estilo gravura em metal. Cada tom é construído com linhas direcionais precisas.',
+    preview: (
+      <svg viewBox="0 0 60 60" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-10 h-10">
+        <circle cx="30" cy="22" r="10" />
+        <path d="M20 40 Q30 32 40 40" />
+        {/* crosshatch no interior */}
+        <line x1="23" y1="16" x2="28" y2="28" strokeWidth="0.6" />
+        <line x1="26" y1="14" x2="31" y2="26" strokeWidth="0.6" />
+        <line x1="29" y1="13" x2="34" y2="25" strokeWidth="0.6" />
+        <line x1="32" y1="14" x2="37" y2="26" strokeWidth="0.6" />
+        {/* cruzamento */}
+        <line x1="23" y1="28" x2="35" y2="14" strokeWidth="0.6" />
+        <line x1="25" y1="30" x2="37" y2="18" strokeWidth="0.6" />
+      </svg>
+    ),
+  },
+  {
+    id: 'fantasma',
+    name: 'Fantasma',
+    tagline: 'Ultra-minimalista e etéreo',
+    description: 'Apenas as linhas mais essenciais, na espessura mínima possível. Perfeito para tatuagens delicadas.',
+    preview: (
+      <svg viewBox="0 0 60 60" fill="none" stroke="currentColor" strokeWidth="0.7" className="w-10 h-10" strokeOpacity="0.7">
+        <circle cx="30" cy="22" r="10" />
+        <path d="M23 30 Q30 38 37 30" />
+        <ellipse cx="30" cy="44" rx="10" ry="3" />
+      </svg>
+    ),
+  },
+]
+
 /* ── Types ───────────────────────────────────────────────────── */
 
 interface DecalJob {
@@ -54,6 +141,71 @@ interface DecalJob {
   output_url: string | null
   status: string
   created_at: string
+}
+
+/* ── Style card ──────────────────────────────────────────────── */
+
+function StyleCard({
+  style,
+  selected,
+  onSelect,
+}: {
+  style: DecalStyle
+  selected: boolean
+  onSelect: () => void
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      className="relative text-left transition-all duration-200 p-4 flex flex-col gap-2 group"
+      style={{
+        background: selected ? 'rgba(34,197,94,0.07)' : 'rgba(255,255,255,0.02)',
+        border: selected
+          ? '1px solid rgba(34,197,94,0.55)'
+          : '1px solid rgba(255,255,255,0.07)',
+        boxShadow: selected ? '0 0 16px rgba(34,197,94,0.12)' : 'none',
+      }}
+    >
+      {/* icon */}
+      <div
+        className="mb-1 transition-colors duration-200"
+        style={{ color: selected ? '#22c55e' : 'rgba(255,255,255,0.3)' }}
+      >
+        {style.preview}
+      </div>
+
+      <div>
+        <div className="flex items-center gap-2 mb-0.5">
+          <span
+            className="font-bebas text-[18px] tracking-[0.05em] leading-none transition-colors duration-200"
+            style={{ color: selected ? '#22c55e' : 'rgba(255,255,255,0.8)' }}
+          >
+            {style.name}
+          </span>
+          {selected && (
+            <span
+              className="text-[8px] font-black uppercase tracking-[0.2em] px-1.5 py-0.5"
+              style={{ background: 'rgba(34,197,94,0.15)', color: '#22c55e', border: '1px solid rgba(34,197,94,0.3)' }}
+            >
+              Selecionado
+            </span>
+          )}
+        </div>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.15em] mb-1.5" style={{ color: selected ? 'rgba(34,197,94,0.7)' : 'rgba(255,255,255,0.2)' }}>
+          {style.tagline}
+        </p>
+        <p className="text-[11px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.3)' }}>
+          {style.description}
+        </p>
+      </div>
+
+      {/* active dot */}
+      {selected && (
+        <div className="absolute top-3 right-3 w-2 h-2 rounded-full bg-[#22c55e]" style={{ boxShadow: '0 0 6px rgba(34,197,94,0.8)' }} />
+      )}
+    </button>
+  )
 }
 
 /* ── Main component ──────────────────────────────────────────── */
@@ -64,6 +216,7 @@ export default function DecalPage() {
   const [file, setFile] = useState<File | null>(null)
   const [imgDims, setImgDims] = useState<{ w: number; h: number } | null>(null)
   const [isDragging, setIsDragging] = useState(false)
+  const [selectedStyle, setSelectedStyle] = useState<DecalStyleId>('espectro')
   const [status, setStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [outputUrl, setOutputUrl] = useState<string | null>(null)
   const [errorMsg, setErrorMsg] = useState('')
@@ -87,7 +240,6 @@ export default function DecalPage() {
     setFile(f)
     const url = URL.createObjectURL(f)
     setPreview(url)
-    // Mede a proporção real da imagem
     const img = new window.Image()
     img.onload = () => {
       setImgDims({ w: img.naturalWidth, h: img.naturalHeight })
@@ -113,6 +265,7 @@ export default function DecalPage() {
 
     const form = new FormData()
     form.append('image', file)
+    form.append('style', selectedStyle)
     if (imgDims) {
       form.append('imgW', String(imgDims.w))
       form.append('imgH', String(imgDims.h))
@@ -141,7 +294,6 @@ export default function DecalPage() {
   const generateAnother = () => {
     setStatus('idle')
     setOutputUrl(null)
-    // mantém o arquivo carregado para gerar novamente
   }
 
   const reset = () => {
@@ -161,10 +313,8 @@ export default function DecalPage() {
     a.click()
   }
 
-  // Proporção do resultado — mesma da imagem enviada
-  const resultAspect = imgDims
-    ? `${imgDims.w} / ${imgDims.h}`
-    : '1 / 1'
+  const resultAspect = imgDims ? `${imgDims.w} / ${imgDims.h}` : '1 / 1'
+  const activeStyle = DECAL_STYLES.find(s => s.id === selectedStyle)!
 
   return (
     <div className="bg-[#0a0a0a] text-white min-h-screen">
@@ -219,8 +369,34 @@ export default function DecalPage() {
             Gerador de <span className="text-[#22c55e] neon-text">Decalques</span>
           </h1>
           <p className="text-white/40 text-sm max-w-lg leading-relaxed">
-            Envie qualquer foto de tatuagem ou referência. A IA converte para stencil profissional com linhas de contorno puras, pronto para impressão e transferência. Cada geração consome 1 crédito.
+            Envie qualquer foto ou referência e escolha o estilo de decalque. A IA converte para stencil profissional pronto para impressão e transferência. Cada geração consome 1 crédito.
           </p>
+        </div>
+
+        {/* ── SELETOR DE ESTILO ──────────────────────────────── */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-white/30">
+              Estilo do decalque
+            </p>
+            <div className="h-px flex-1" style={{ background: 'linear-gradient(90deg, rgba(255,255,255,0.06), transparent)' }} />
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            {DECAL_STYLES.map(style => (
+              <StyleCard
+                key={style.id}
+                style={style}
+                selected={selectedStyle === style.id}
+                onSelect={() => {
+                  setSelectedStyle(style.id)
+                  if (status === 'done') {
+                    setStatus('idle')
+                    setOutputUrl(null)
+                  }
+                }}
+              />
+            ))}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
@@ -248,7 +424,6 @@ export default function DecalPage() {
                     alt="Referência"
                     className="w-full h-full object-contain p-2"
                   />
-                  {/* Corner brackets */}
                   <div className="absolute top-2 left-2 w-5 h-5 border-t border-l border-[#22c55e]/40 bracket-glow" />
                   <div className="absolute top-2 right-2 w-5 h-5 border-t border-r border-[#22c55e]/40 bracket-glow" />
                   <div className="absolute bottom-2 left-2 w-5 h-5 border-b border-l border-[#22c55e]/40 bracket-glow" />
@@ -276,7 +451,20 @@ export default function DecalPage() {
               onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f) }}
             />
 
-            {/* Botão gerar */}
+            {/* Estilo selecionado + botão gerar */}
+            {file && (
+              <div
+                className="flex items-center gap-3 px-4 py-2.5 text-[11px]"
+                style={{ background: 'rgba(34,197,94,0.04)', border: '1px solid rgba(34,197,94,0.12)' }}
+              >
+                <span className="text-[#22c55e]"><SparkleIcon /></span>
+                <span className="text-white/40">Estilo:</span>
+                <span className="font-bebas text-[15px] text-[#22c55e] tracking-[0.05em]">{activeStyle.name}</span>
+                <span className="text-white/20">—</span>
+                <span className="text-white/30">{activeStyle.tagline}</span>
+              </div>
+            )}
+
             <button
               onClick={generate}
               disabled={!file || status === 'loading'}
@@ -289,7 +477,7 @@ export default function DecalPage() {
               {status === 'loading' ? (
                 <>
                   <span className="w-4 h-4 border border-[#22c55e] border-t-transparent rounded-full animate-spin" />
-                  Analisando e gerando...
+                  Gerando decalque {activeStyle.name}...
                 </>
               ) : (
                 <>
@@ -325,8 +513,8 @@ export default function DecalPage() {
                     <div className="w-8 h-8 border border-[#22c55e]/40 border-t-[#22c55e] rounded-full animate-spin" />
                   </div>
                 </div>
-                <p className="text-white/40 text-sm mb-1">Gerando seu decalque...</p>
-                <p className="text-white/20 text-[11px] uppercase tracking-[0.15em]">GPT Image 2 — processando...</p>
+                <p className="text-white/40 text-sm mb-1">Gerando estilo <span className="text-[#22c55e]">{activeStyle.name}</span>...</p>
+                <p className="text-white/20 text-[11px] uppercase tracking-[0.15em]">{activeStyle.tagline}</p>
               </div>
             )}
 
@@ -342,7 +530,7 @@ export default function DecalPage() {
               >
                 <span className="text-white/10 mb-4"><CrosshairIcon size={40} /></span>
                 <p className="text-white/20 text-sm">O decalque gerado aparecerá aqui</p>
-                <p className="text-white/10 text-[11px] mt-2 uppercase tracking-[0.15em]">Envie uma imagem e clique em gerar</p>
+                <p className="text-white/10 text-[11px] mt-2 uppercase tracking-[0.15em]">Escolha um estilo e clique em gerar</p>
               </div>
             )}
 
@@ -370,13 +558,13 @@ export default function DecalPage() {
 
                   <div className="absolute top-3 left-1/2 -translate-x-1/2 flex items-center gap-2 px-3 py-1 bg-black/80 border border-[#22c55e]/40">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
-                    <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[#22c55e]">Decalque Gerado</span>
+                    <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[#22c55e]">{activeStyle.name} — Gerado</span>
                   </div>
                 </div>
 
                 <div className="flex gap-3">
                   <button
-                    onClick={() => downloadResult(outputUrl, `decalque-proink-${Date.now()}.png`)}
+                    onClick={() => downloadResult(outputUrl, `decalque-${activeStyle.id}-proink-${Date.now()}.png`)}
                     className="flex-1 flex items-center justify-center gap-2 py-3 border border-[#22c55e] text-[#22c55e] text-[11px] font-semibold uppercase tracking-[0.15em] hover:bg-[#22c55e] hover:text-black transition-all duration-200 neon-border"
                   >
                     <DownloadIcon />
@@ -423,7 +611,6 @@ export default function DecalPage() {
                         alt="Decalque"
                         className="w-full h-full object-contain p-2"
                       />
-                      {/* Hover overlay */}
                       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-2"
                         style={{ background: 'rgba(0,0,0,0.7)' }}
                       >
@@ -435,7 +622,6 @@ export default function DecalPage() {
                           <DownloadIcon />
                         </button>
                       </div>
-                      {/* Data */}
                       <div className="absolute bottom-1.5 left-0 right-0 text-center">
                         <span className="text-[8px] text-white/25">
                           {new Date(decal.created_at).toLocaleDateString('pt-BR')}

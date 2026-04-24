@@ -3,6 +3,8 @@ import { UserButton } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getOrCreateProfile, getCreditsAvailable, getRecentDecals } from "@/lib/db/profiles";
+import { createCheckoutSession, createPortalSession } from "@/app/actions/stripe";
+import { STRIPE_PLANS } from "@/lib/stripe/plans";
 
 /* ── Icons ─────────────────────────────────────────────────── */
 
@@ -313,17 +315,23 @@ export default async function DashboardPage() {
                   <span className="ml-2 text-[#22c55e] neon-text-sm">· {creditsAvailable} créditos</span>
                 )}
               </div>
-              <button
-                disabled={profile.plan === "free" || creditsAvailable === 0}
-                className="flex items-center gap-2 px-6 py-3 text-[11px] font-black uppercase tracking-[0.18em] transition-all duration-200"
-                style={
-                  profile.plan !== "free" && creditsAvailable > 0
-                    ? { background: "#22c55e", color: "#000" }
-                    : { background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.25)", border: "1px solid rgba(255,255,255,0.08)", cursor: "not-allowed" }
-                }
-              >
-                {profile.plan === "free" ? "Assine um plano" : creditsAvailable === 0 ? "Sem créditos" : (<>Gerar decalque <ArrowIcon /></>)}
-              </button>
+              {profile.plan !== "free" && creditsAvailable > 0 ? (
+                <Link
+                  href="/dashboard/decal"
+                  className="flex items-center gap-2 px-6 py-3 text-[11px] font-black uppercase tracking-[0.18em] transition-all duration-200"
+                  style={{ background: "#22c55e", color: "#000" }}
+                >
+                  Gerar decalque <ArrowIcon />
+                </Link>
+              ) : (
+                <button
+                  disabled
+                  className="flex items-center gap-2 px-6 py-3 text-[11px] font-black uppercase tracking-[0.18em]"
+                  style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.25)", border: "1px solid rgba(255,255,255,0.08)", cursor: "not-allowed" }}
+                >
+                  {profile.plan === "free" ? "Assine um plano" : "Sem créditos"}
+                </button>
+              )}
             </div>
           </div>
 
@@ -343,6 +351,67 @@ export default async function DashboardPage() {
                   }}
                 />
               </div>
+            </div>
+          )}
+        </section>
+
+        {/* ── Planos / Portal ── */}
+        <section className="mx-6 md:mx-10 mb-8">
+          {profile.plan === "free" ? (
+            <>
+              <h2 className="font-bebas text-xl tracking-[0.06em] text-white mb-4 uppercase">Escolha seu plano</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                {(["starter", "pro", "creator"] as const).map((plan) => {
+                  const config = STRIPE_PLANS[plan];
+                  return (
+                    <form key={plan} action={createCheckoutSession.bind(null, plan)}>
+                      <button
+                        type="submit"
+                        className="w-full text-left p-5 rounded transition-all duration-200 hover:scale-[1.01] active:scale-[0.99]"
+                        style={{ background: "rgba(34,197,94,0.04)", border: "1px solid rgba(34,197,94,0.12)" }}
+                      >
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="font-bebas text-xl tracking-[0.06em] text-white">{config.name}</span>
+                          <span className="text-[10px] font-bold text-[#22c55e] uppercase tracking-widest">{config.credits} créditos/mês</span>
+                        </div>
+                        <div className="text-2xl font-black text-white mb-3">{config.price}</div>
+                        <div
+                          className="w-full py-2 text-center text-[11px] font-black uppercase tracking-[0.16em] text-black"
+                          style={{ background: "#22c55e" }}
+                        >
+                          Assinar {config.name}
+                        </div>
+                      </button>
+                    </form>
+                  );
+                })}
+              </div>
+            </>
+          ) : (
+            <div
+              className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 rounded"
+              style={{ background: "rgba(34,197,94,0.04)", border: "1px solid rgba(34,197,94,0.12)" }}
+            >
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.18em] text-white/30 mb-1">Assinatura ativa</p>
+                <p className="font-bebas text-xl tracking-[0.06em] text-white">
+                  Plano {STRIPE_PLANS[profile.plan as Exclude<typeof profile.plan, "free">]?.name}
+                  <span className="ml-3 text-[#22c55e] neon-text-sm text-base">· {creditsAvailable} créditos restantes</span>
+                </p>
+                {profile.plan_expires_at && (
+                  <p className="text-[11px] text-white/30 mt-1">
+                    Renova em {new Date(profile.plan_expires_at).toLocaleDateString("pt-BR")}
+                  </p>
+                )}
+              </div>
+              <form action={createPortalSession}>
+                <button
+                  type="submit"
+                  className="px-5 py-2.5 text-[11px] font-black uppercase tracking-[0.16em] border border-[#22c55e]/40 text-[#22c55e] hover:bg-[#22c55e]/10 transition-colors"
+                >
+                  Gerenciar assinatura →
+                </button>
+              </form>
             </div>
           )}
         </section>

@@ -211,20 +211,36 @@ export default async function HomePage() {
       ══════════════════════════════════════════ */}
       <section id="inicio" className="relative min-h-screen flex flex-col overflow-hidden pt-16">
 
+        {/* AI-generated background image */}
+        <div className="absolute inset-0">
+          <Image
+            src="/bg-hero.png"
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover object-center"
+            priority
+          />
+          {/* Directional overlay — dark left for text, transparent right to reveal the face */}
+          <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(0,0,0,0.90) 0%, rgba(0,0,0,0.78) 28%, rgba(0,0,0,0.45) 52%, rgba(0,0,0,0.18) 75%, rgba(0,0,0,0.10) 100%)" }} />
+          {/* Green tint layer on the photo side */}
+          <div className="absolute inset-0" style={{ background: "linear-gradient(to right, transparent 35%, rgba(34,197,94,0.10) 60%, rgba(34,197,94,0.18) 100%)" }} />
+        </div>
+
         {/* Layered background glows */}
         <div className="absolute inset-0 pointer-events-none">
-          {/* Main green orb — right side */}
+          {/* Main green orb — right side, vivid */}
           <div
             className="absolute right-[-5%] top-[-10%] w-[65vw] h-[100vh] glow-pulse"
-            style={{ background: "radial-gradient(ellipse at 60% 35%, rgba(34,197,94,0.18) 0%, rgba(34,197,94,0.05) 40%, transparent 70%)" }}
+            style={{ background: "radial-gradient(ellipse at 60% 35%, rgba(34,197,94,0.38) 0%, rgba(34,197,94,0.14) 40%, transparent 70%)" }}
           />
           {/* Secondary orb — bottom left */}
           <div
             className="absolute left-[-10%] bottom-[-5%] w-[50vw] h-[50vh]"
-            style={{ background: "radial-gradient(ellipse at 30% 80%, rgba(34,197,94,0.06) 0%, transparent 65%)" }}
+            style={{ background: "radial-gradient(ellipse at 30% 80%, rgba(34,197,94,0.10) 0%, transparent 65%)" }}
           />
-          {/* Vignette */}
-          <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(0,0,0,0.7) 100%)" }} />
+          {/* Vignette — only edges, not centre */}
+          <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 50%, transparent 50%, rgba(0,0,0,0.55) 100%)" }} />
         </div>
 
         {/* Grid overlay */}
@@ -237,11 +253,11 @@ export default async function HomePage() {
           }}
         />
 
-        {/* Main two-column layout */}
-        <div className="flex-1 max-w-[1400px] mx-auto px-6 md:px-10 w-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-center py-12">
+        {/* Hero layout — text left, photo bleeds through naturally on right */}
+        <div className="flex-1 max-w-[1400px] mx-auto px-6 md:px-10 w-full flex items-center py-12">
 
-          {/* ── Left: text ── */}
-          <div className="relative z-10">
+          {/* Text block — max half-width so the face shows on the right */}
+          <div className="relative z-10 max-w-[600px] w-full">
 
             {/* Tag */}
             <div className="hero-in flex items-center gap-3 mb-7">
@@ -315,73 +331,6 @@ export default async function HomePage() {
             </div>
           </div>
 
-          {/* ── Right: visual frame ── */}
-          <div className="hero-in-3 relative hidden lg:flex items-center justify-center">
-            <div className="relative" style={{ width: "460px", height: "580px", flexShrink: 0 }}>
-
-              {/* Hero image frame */}
-              <div
-                className="absolute inset-0 overflow-hidden"
-                style={{ border: "1px solid rgba(34,197,94,0.15)" }}
-              >
-                <Image
-                  src="/hero.jpg"
-                  alt="Tatuagem realismo - Pro Ink"
-                  fill
-                  sizes="460px"
-                  className="object-cover object-center"
-                  priority
-                />
-                {/* Dark overlay at bottom to blend into page */}
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background: "linear-gradient(to top, rgba(10,10,10,0.6) 0%, rgba(10,10,10,0.1) 40%, transparent 70%)",
-                  }}
-                />
-                {/* Subtle green tint overlay */}
-                <div
-                  className="absolute inset-0"
-                  style={{ background: "rgba(34,197,94,0.04)" }}
-                />
-              </div>
-
-              {/* Scan line animation */}
-              <div className="scan-line" />
-
-              {/* Green ambient glow behind the frame */}
-              <div
-                className="absolute -inset-8 -z-10 glow-pulse"
-                style={{ background: "radial-gradient(circle, rgba(34,197,94,0.16) 0%, transparent 65%)" }}
-              />
-
-              {/* Animated corner brackets */}
-              <div className="absolute top-0 left-0 w-9 h-9 border-t-[2px] border-l-[2px] bracket-glow" style={{ borderColor: "rgba(34,197,94,0.7)" }} />
-              <div className="absolute top-0 right-0 w-9 h-9 border-t-[2px] border-r-[2px] bracket-glow" style={{ borderColor: "rgba(34,197,94,0.7)" }} />
-              <div className="absolute bottom-0 left-0 w-9 h-9 border-b-[2px] border-l-[2px] bracket-glow" style={{ borderColor: "rgba(34,197,94,0.7)" }} />
-              <div className="absolute bottom-0 right-0 w-9 h-9 border-b-[2px] border-r-[2px] bracket-glow" style={{ borderColor: "rgba(34,197,94,0.7)" }} />
-
-              {/* Vertical label */}
-              <div className="absolute -right-[52px] top-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
-                <div className="w-px h-16" style={{ background: "linear-gradient(to bottom,transparent,rgba(34,197,94,0.3),transparent)" }} />
-                <span
-                  className="text-[8px] font-semibold uppercase tracking-[0.3em] text-white/18"
-                  style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
-                >
-                  Pro Ink Studio
-                </span>
-                <div className="w-px h-16" style={{ background: "linear-gradient(to bottom,transparent,rgba(34,197,94,0.3),transparent)" }} />
-              </div>
-
-              {/* Side caption */}
-              <div className="absolute -right-2 top-6 text-right pr-2">
-                <p className="text-[8px] font-medium uppercase tracking-[0.2em] text-white/15 leading-loose">
-                  Cada traço<br />conta uma<br />
-                  <span style={{ color: "rgba(34,197,94,0.4)" }}>história.</span>
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* ── Features strip ── */}

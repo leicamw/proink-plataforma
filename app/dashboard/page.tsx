@@ -311,11 +311,11 @@ export default async function DashboardPage() {
               {/* Plan badge */}
               <div className="text-[10px] text-white/30 uppercase tracking-[0.18em]">
                 Plano: <span className="text-white/60 font-semibold">{PLAN_LABEL[profile.plan]}</span>
-                {profile.plan !== "free" && (
+                {creditsAvailable > 0 && (
                   <span className="ml-2 text-[#22c55e] neon-text-sm">· {creditsAvailable} créditos</span>
                 )}
               </div>
-              {profile.plan !== "free" && creditsAvailable > 0 ? (
+              {creditsAvailable > 0 ? (
                 <Link
                   href="/dashboard/decal"
                   className="flex items-center gap-2 px-6 py-3 text-[11px] font-black uppercase tracking-[0.18em] transition-all duration-200"
@@ -336,7 +336,7 @@ export default async function DashboardPage() {
           </div>
 
           {/* Credits bar */}
-          {profile.plan !== "free" && profile.credits_total > 0 && (
+          {profile.credits_total > 0 && (
             <div className="px-8 pb-6">
               <div className="flex justify-between text-[9px] text-white/25 uppercase tracking-[0.18em] mb-1.5">
                 <span>{profile.credits_used} usados</span>

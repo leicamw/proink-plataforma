@@ -6,11 +6,12 @@ import { getProfile, getCreditsAvailable, debitCredit } from '@/lib/db/profiles'
 
 export const maxDuration = 120
 
-// Cliente apontando para a PiAPI com o mesmo formato do SDK OpenAI
 const piapi = new OpenAI({
   apiKey: process.env.PIAPI_API_KEY!,
   baseURL: 'https://api.piapi.ai/v1',
 })
+
+const OUTPUT_BUCKET = 'decal-outputs'
 
 const STENCIL_PROMPT = `Convert the provided image into a PROFESSIONAL TATTOO STENCIL made of CONTOUR LINES ONLY.
 
@@ -38,6 +39,25 @@ optimized for high-resolution printing, stencil machines, and large-scale tattoo
 
 Prioritize vector-like line quality and maximum resolution over artistic style.`
 
+function pickSize(w: number, h: number): '1024x1024' | '1024x1536' | '1536x1024' {
+  const ratio = w / h
+  if (ratio > 1.2) return '1536x1024'
+  if (ratio < 0.8) return '1024x1536'
+  return '1024x1024'
+}
+
+async function storeOutput(buffer: Buffer, jobId: string, userId: string): Promise<string> {
+  await supabaseAdmin.storage.createBucket(OUTPUT_BUCKET, { public: true }).catch(() => null)
+
+  const path = `${userId}/${jobId}.png`
+  await supabaseAdmin.storage
+    .from(OUTPUT_BUCKET)
+    .upload(path, buffer, { contentType: 'image/png', upsert: true })
+
+  const { data } = supabaseAdmin.storage.from(OUTPUT_BUCKET).getPublicUrl(path)
+  return data.publicUrl
+}
+
 export async function POST(req: NextRequest) {
   const { userId } = await auth()
   if (!userId) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
@@ -62,6 +82,11 @@ export async function POST(req: NextRequest) {
   const imageFile = formData.get('image') as File | null
   if (!imageFile) return NextResponse.json({ error: 'Imagem obrigatória' }, { status: 400 })
 
+  // Proporção enviada pelo cliente
+  const imgW = parseInt(formData.get('imgW') as string || '0', 10)
+  const imgH = parseInt(formData.get('imgH') as string || '0', 10)
+  const size = imgW > 0 && imgH > 0 ? pickSize(imgW, imgH) : '1024x1024'
+
   const { data: job, error: jobError } = await supabaseAdmin
     .from('decal_jobs')
     .insert({ clerk_user_id: userId, status: 'processing' })
@@ -73,19 +98,24 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    // gpt-image-2-preview via PiAPI — image-to-image direto, síncrono
     const response = await piapi.images.edit({
       model: 'gpt-image-2-preview',
       image: imageFile,
       prompt: STENCIL_PROMPT,
       n: 1,
-      size: '1024x1024',
+      size,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       response_format: 'url' as any,
-    })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any)
 
-    const outputUrl = response.data?.[0]?.url
-    if (!outputUrl) throw new Error('PiAPI não retornou URL da imagem')
+    const tempUrl = response.data?.[0]?.url
+    if (!tempUrl) throw new Error('PiAPI não retornou URL da imagem')
+
+    // Baixa e armazena permanentemente no Supabase Storage
+    const imgRes = await fetch(tempUrl)
+    const imgBuffer = Buffer.from(await imgRes.arrayBuffer())
+    const outputUrl = await storeOutput(imgBuffer, job.id, userId)
 
     await supabaseAdmin
       .from('decal_jobs')

@@ -13,8 +13,9 @@ export default function SignInPage() {
         appearance={{
           elements: {
             card: "bg-[#111111] border border-white/[0.08] shadow-2xl",
-            headerTitle: "text-white",
-            headerSubtitle: "text-[#a3a3a3]",
+            headerTitle: "hidden",
+            headerSubtitle: "hidden",
+            header: "hidden",
             socialButtonsBlockButton:
               "bg-[#1a1a1a] border border-white/[0.08] text-white hover:bg-[#222222]",
             formButtonPrimary:
@@ -25,6 +26,7 @@ export default function SignInPage() {
             formFieldLabel: "text-[#a3a3a3]",
             dividerLine: "bg-white/[0.08]",
             dividerText: "text-[#a3a3a3]",
+            footer: "hidden",
           },
         }}
       />

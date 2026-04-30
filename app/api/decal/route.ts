@@ -18,99 +18,88 @@ const OUTPUT_BUCKET = 'decal-outputs'
 export const DECAL_STYLE_IDS = ['espectro', 'sombras', 'cinzel', 'fantasma'] as const
 export type DecalStyleId = typeof DECAL_STYLE_IDS[number]
 
+const BASE_PROMPT = `Create a PROFESSIONAL TATTOO STENCIL directly from the input image.
+
+IMPORTANT: This must be a TRACE-BASED STENCIL, not a new drawing.
+
+Use the input image as an exact template underneath the linework, as if tracing over transparent paper.
+
+The final stencil must preserve the EXACT original proportions, angles, positions, distances, perspective, scale, and alignment of the source image.
+
+Every line must be placed exactly over the corresponding visual structure of the original image.
+
+DO NOT redraw.
+DO NOT reinterpret.
+DO NOT stylize.
+DO NOT correct anatomy.
+DO NOT beautify.
+DO NOT change facial features.
+DO NOT change expression.
+DO NOT change pose.
+DO NOT change perspective.
+DO NOT move any element.
+DO NOT resize or reshape any part of the image.
+
+The stencil must match the original image when overlaid on top of it.
+
+Preserve the exact placement of:
+— eyes
+— eyebrows
+— nose
+— mouth
+— lips
+— ears
+— jawline
+— chin
+— hairline
+— beard
+— fingers
+— hands
+— clothing folds
+— accessories
+— all important contours
+
+Use ONLY clean black contour lines.
+
+All lines must be solid black, sharp, continuous, and clearly visible.
+
+Use stronger line weight for main outer contours and slightly lighter but still visible lines for internal details.
+
+No gray tones.
+No shading.
+No gradients.
+No filled black areas.
+No sketchy lines.
+No artistic reinterpretation.
+No background changes unless the background is not needed.
+
+Dark areas in the original image must NOT become black filled blocks. Represent them only with clean outline lines and simple internal contour markings.
+
+Subtle shadows that define important structure must be converted into simple contour lines or clean dotted guide marks, but only when necessary.
+
+Dotted marks must be clean, controlled, evenly spaced, and not excessive.
+
+Keep the result clean, readable, and suitable for thermal tattoo stencil printing.
+
+The final result must be a high-contrast, line-only stencil that works as an accurate tracing guide and aligns precisely with the original image.`
+
 const STYLE_PROMPTS: Record<DecalStyleId, string> = {
-  espectro: `Convert the provided image into a PROFESSIONAL TATTOO STENCIL made of CONTOUR LINES ONLY.
+  espectro: BASE_PROMPT,
 
-Generate the image in ULTRA HIGH RESOLUTION, prioritizing maximum sharpness and line fidelity.
-Output must be suitable for professional print and stencil transfer, with VERY HIGH DPI (print-quality resolution) and high megapixel density, allowing deep zoom without loss of detail.
+  sombras: BASE_PROMPT + `
 
-Use ONLY clean, continuous black contour lines with HARD, CRISP edges.
-Lines must be smooth, stable, and well-defined — NOT sketchy, NOT pixelated, and NOT anti-aliased.
+STYLE ADDITION — SOMBRAS:
+In areas where the original image has clear shadow or depth, add fine evenly-spaced parallel hatching lines to indicate volume. Hatching must follow the surface curvature. Light areas remain completely white. All other rules above remain fully in effect.`,
 
-DO NOT use any solid black areas, fills, shading, gray tones, gradients, hatching, dots, textures, or tonal interpretation.
-Absolutely NO FILL anywhere in the image.
+  cinzel: BASE_PROMPT + `
 
-All shapes, symbols, numbers, suits, dice dots, and graphic elements must be represented ONLY by precise outlines.
+STYLE ADDITION — CINZEL:
+In shadow and mid-tone areas, add fine crosshatch lines in the style of a traditional copper plate engraving. Light areas remain white. Dark areas use denser crosshatch. All crosshatch lines must be crisp, uniform, and directional. All other rules above remain fully in effect.`,
 
-Preserve exact proportions, perspective, and structure of all elements.
-Hiper details ONLY when necessary to maintain stencil clarity and print precision.
+  fantasma: BASE_PROMPT + `
 
-All negative space must remain completely clean and empty.
-
-Simplify the background aggressively, outlining only essential interacting elements.
-Exclude all decorative or unnecessary details.
-
-The final result must be a CLEAN, PURE LINE, HIGH-CONTRAST tattoo stencil,
-optimized for high-resolution printing, stencil machines, and large-scale tattoo application.
-
-Prioritize vector-like line quality and maximum resolution over artistic style.`,
-
-  sombras: `Convert the provided image into an ADVANCED SHADOW TATTOO STENCIL with directional depth indicators.
-
-Generate the image in ULTRA HIGH RESOLUTION with maximum sharpness and line fidelity.
-Output must be suitable for professional print and stencil transfer at VERY HIGH DPI.
-
-Use clean black contour lines for ALL primary forms, combined with FINE PARALLEL HATCHING in shadow and depth areas only.
-Hatching lines must be evenly spaced, directional, and methodical — like a traditional engraved stencil.
-Light areas remain completely clean (white). Shadow areas use fine parallel lines. Mid-tones use sparse hatching.
-
-DO NOT use solid fills, solid black areas, gray tones, or gradients.
-ALL shadow and depth information must be expressed ONLY through evenly-spaced fine line hatching.
-
-Preserve exact proportions, perspective, and all structural details.
-The hatching direction must follow the form's curvature — cross-contour hatching only.
-
-Negative space in highlight areas must remain completely empty and clean.
-
-The result must be a PROFESSIONAL SHADOW STENCIL suitable for tattoo artists who work with depth and volume,
-optimized for high-resolution printing and precise stencil transfer.`,
-
-  cinzel: `Convert the provided image into a WOODCUT ENGRAVING TATTOO STENCIL in classic copper plate style.
-
-Generate in ULTRA HIGH RESOLUTION for professional print quality.
-Output must be suitable for stencil transfer with maximum sharpness.
-
-Use CROSSHATCH and directional line patterns to express ALL tones and textures.
-Apply these rules strictly:
-- Bright/highlight areas: very sparse single lines or empty white space
-- Mid-tones: fine parallel lines, moderately spaced
-- Three-quarter tones: two sets of crossing hatching (crosshatch)
-- Dark/shadow areas: dense multi-directional crosshatch (3 or more directions)
-
-All lines must be CRISP, UNIFORM in thickness, and precisely spaced like a copper plate or wood engraving.
-NO solid fills. ALL shading must be expressed purely through organized LINE WORK.
-
-Lines should follow the contour of forms (cross-contour hatching) to enhance volume.
-
-The style must evoke the graphic energy of classic woodblock prints and traditional tattoo flash sheets.
-Bold, energetic, full of directional line tension.
-
-The result must be clean, highly printable, and visually striking — optimized for large-scale tattoo stencil application.`,
-
-  fantasma: `Convert the provided image into an ULTRA-MINIMAL GHOST TATTOO STENCIL.
-
-Generate in ULTRA HIGH RESOLUTION with razor-sharp precision and extreme line delicacy.
-Output must be suitable for professional print and stencil transfer.
-
-Use ONLY the absolute essential primary contour lines — the thinnest, most precise outlines possible.
-Hair-thin, single-pixel-width strokes only.
-
-ELIMINATE all secondary detail lines, texture, interior marks, decorative elements, and background details.
-
-Capture ONLY:
-- The defining outer silhouette of the main subject
-- The single most critical interior line that defines the core structure
-- Essential facial features reduced to their simplest geometric form
-
-Everything else must be completely clean, empty white space.
-
-NO fills, NO shading, NO hatching, NO crosshatch, NO texture, NO dot work, NO pattern.
-Absolutely zero interior detail lines unless critical to identify the subject.
-
-The final result should feel ghostly, minimal, and ethereal — as if the tattoo barely exists on the skin.
-A whisper of an image, not a shout.
-
-Perfect for ultra-delicate, minimalist, micro-tattoo applications requiring surgical line precision.`,
+STYLE ADDITION — FANTASMA:
+Use only the absolute minimum essential lines. Remove all secondary detail lines and internal marks, keeping only the primary silhouette and the most critical structural contours. The result must be extremely minimal, delicate, and almost ethereal. All other rules above remain fully in effect.`,
 }
 
 /* ── Utilities ───────────────────────────────────────────────── */

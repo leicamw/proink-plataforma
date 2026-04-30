@@ -51,6 +51,43 @@ function SparkleIcon() {
 
 type DecalStyleId = 'espectro' | 'sombras' | 'cinzel' | 'fantasma'
 
+// Placeholder — troque por <img src={`/styles/${id}.jpg`} .../> quando tiver as imagens
+function StylePreview({ id, name }: { id: string; name: string }) {
+  return (
+    <div
+      className="w-full relative overflow-hidden"
+      style={{ aspectRatio: '4/3', background: 'rgba(255,255,255,0.02)' }}
+    >
+      {/* Grade decorativa */}
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: 'linear-gradient(rgba(34,197,94,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(34,197,94,0.06) 1px,transparent 1px)',
+          backgroundSize: '20px 20px',
+        }}
+      />
+      {/* Nome do estilo em ghost grande */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span
+          className="font-bebas select-none text-center leading-none px-2"
+          style={{ fontSize: '28px', color: 'rgba(34,197,94,0.07)', letterSpacing: '0.05em' }}
+        >
+          {name.toUpperCase()}
+        </span>
+      </div>
+      {/* Label de placeholder */}
+      <div className="absolute bottom-2 left-0 right-0 flex justify-center">
+        <span
+          className="text-[7px] font-bold uppercase tracking-[0.2em] px-2 py-0.5"
+          style={{ background: 'rgba(0,0,0,0.6)', color: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.06)' }}
+        >
+          Preview em breve
+        </span>
+      </div>
+    </div>
+  )
+}
+
 interface DecalStyle {
   id: DecalStyleId
   name: string
@@ -66,14 +103,7 @@ const DECAL_STYLES: DecalStyle[] = [
     tagline: 'Linhas puras de contorno',
     description: 'Stencil clássico com linhas de contorno limpas e precisas. Ideal para qualquer estilo.',
     preview: (
-      <svg viewBox="0 0 60 60" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-10 h-10">
-        <circle cx="30" cy="22" r="10" />
-        <path d="M20 40 Q30 32 40 40" />
-        <ellipse cx="30" cy="44" rx="12" ry="4" />
-        <circle cx="26" cy="20" r="1.5" />
-        <circle cx="34" cy="20" r="1.5" />
-        <path d="M26 27 Q30 30 34 27" />
-      </svg>
+      <StylePreview id="espectro" name="Espectro" />
     ),
   },
   {
@@ -82,21 +112,7 @@ const DECAL_STYLES: DecalStyle[] = [
     tagline: 'Profundidade com hachura fina',
     description: 'Linhas de contorno combinadas com hachura direcional nas áreas de sombra. Dá volume ao design.',
     preview: (
-      <svg viewBox="0 0 60 60" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-10 h-10">
-        <circle cx="30" cy="22" r="10" />
-        <path d="M20 40 Q30 32 40 40" />
-        <ellipse cx="30" cy="44" rx="12" ry="4" />
-        {/* hachura lateral direita */}
-        <line x1="36" y1="15" x2="38" y2="19" strokeWidth="0.7" />
-        <line x1="37" y1="18" x2="39" y2="22" strokeWidth="0.7" />
-        <line x1="38" y1="21" x2="40" y2="25" strokeWidth="0.7" />
-        <line x1="37" y1="24" x2="39" y2="28" strokeWidth="0.7" />
-        <line x1="35" y1="27" x2="37" y2="31" strokeWidth="0.7" />
-        {/* hachura base */}
-        <line x1="20" y1="41" x2="22" y2="44" strokeWidth="0.7" />
-        <line x1="23" y1="42" x2="25" y2="45" strokeWidth="0.7" />
-        <line x1="26" y1="42.5" x2="28" y2="45.5" strokeWidth="0.7" />
-      </svg>
+      <StylePreview id="sombras" name="Sombras" />
     ),
   },
   {
@@ -105,18 +121,7 @@ const DECAL_STYLES: DecalStyle[] = [
     tagline: 'Entalhado em chapa de cobre',
     description: 'Reticulado cruzado estilo gravura em metal. Cada tom é construído com linhas direcionais precisas.',
     preview: (
-      <svg viewBox="0 0 60 60" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-10 h-10">
-        <circle cx="30" cy="22" r="10" />
-        <path d="M20 40 Q30 32 40 40" />
-        {/* crosshatch no interior */}
-        <line x1="23" y1="16" x2="28" y2="28" strokeWidth="0.6" />
-        <line x1="26" y1="14" x2="31" y2="26" strokeWidth="0.6" />
-        <line x1="29" y1="13" x2="34" y2="25" strokeWidth="0.6" />
-        <line x1="32" y1="14" x2="37" y2="26" strokeWidth="0.6" />
-        {/* cruzamento */}
-        <line x1="23" y1="28" x2="35" y2="14" strokeWidth="0.6" />
-        <line x1="25" y1="30" x2="37" y2="18" strokeWidth="0.6" />
-      </svg>
+      <StylePreview id="cinzel" name="Cinzel" />
     ),
   },
   {
@@ -125,11 +130,7 @@ const DECAL_STYLES: DecalStyle[] = [
     tagline: 'Ultra-minimalista e etéreo',
     description: 'Apenas as linhas mais essenciais, na espessura mínima possível. Perfeito para tatuagens delicadas.',
     preview: (
-      <svg viewBox="0 0 60 60" fill="none" stroke="currentColor" strokeWidth="0.7" className="w-10 h-10" strokeOpacity="0.7">
-        <circle cx="30" cy="22" r="10" />
-        <path d="M23 30 Q30 38 37 30" />
-        <ellipse cx="30" cy="44" rx="10" ry="3" />
-      </svg>
+      <StylePreview id="fantasma" name="Fantasma" />
     ),
   },
 ]
@@ -158,7 +159,7 @@ function StyleCard({
     <button
       type="button"
       onClick={onSelect}
-      className="relative text-left transition-all duration-200 p-4 flex flex-col gap-2 group"
+      className="relative text-left transition-all duration-200 flex flex-col group overflow-hidden"
       style={{
         background: selected ? 'rgba(34,197,94,0.07)' : 'rgba(255,255,255,0.02)',
         border: selected
@@ -167,15 +168,12 @@ function StyleCard({
         boxShadow: selected ? '0 0 16px rgba(34,197,94,0.12)' : 'none',
       }}
     >
-      {/* icon */}
-      <div
-        className="mb-1 transition-colors duration-200"
-        style={{ color: selected ? '#22c55e' : 'rgba(255,255,255,0.3)' }}
-      >
+      {/* Preview image / placeholder */}
+      <div className="w-full">
         {style.preview}
       </div>
 
-      <div>
+      <div className="p-3">
         <div className="flex items-center gap-2 mb-0.5">
           <span
             className="font-bebas text-[18px] tracking-[0.05em] leading-none transition-colors duration-200"
@@ -202,7 +200,7 @@ function StyleCard({
 
       {/* active dot */}
       {selected && (
-        <div className="absolute top-3 right-3 w-2 h-2 rounded-full bg-[#22c55e]" style={{ boxShadow: '0 0 6px rgba(34,197,94,0.8)' }} />
+        <div className="absolute top-3 right-3 w-2 h-2 rounded-full bg-[#22c55e]" style={{ boxShadow: '0 0 6px rgba(34,197,94,0.8)', zIndex: 10 }} />
       )}
     </button>
   )

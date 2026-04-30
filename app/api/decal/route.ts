@@ -170,7 +170,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const response = await piapi.images.edit({
-      model: 'gpt-image-1.5',
+      model: 'gpt-image-1',
       image: imageFile,
       prompt: STYLE_PROMPTS[style],
       n: 1,

@@ -55,6 +55,7 @@ type DecalStyleId = 'simples' | 'medio' | 'avancado' | 'fineline'
 const STYLE_IMAGES: Partial<Record<string, string>> = {
   simples: '/style-simples.png',
   medio: '/style-medio.png',
+  avancado: '/style-avancado.png',
 }
 
 function StylePreview({ id, name }: { id: string; name: string }) {

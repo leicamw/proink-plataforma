@@ -18,7 +18,6 @@ export function Logo({ size = 36, showText = true, subtitle = 'Tattoo Platform' 
           alt="Pro Ink Logo"
           fill
           className="object-contain"
-          style={{ mixBlendMode: 'screen' }}
           sizes={`${size}px`}
           priority
         />

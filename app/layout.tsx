@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Bebas_Neue, Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
+import { ChatWidget } from "@/app/_components/chat-widget";
 import "./globals.css";
 
 const bebasNeue = Bebas_Neue({
@@ -38,6 +39,7 @@ export default function RootLayout({
       >
         <body className="min-h-full flex flex-col bg-[#0a0a0a] text-[#f5f5f5]">
           {children}
+          <ChatWidget />
         </body>
       </html>
     </ClerkProvider>

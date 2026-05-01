@@ -56,6 +56,7 @@ const STYLE_IMAGES: Partial<Record<string, string>> = {
   simples: '/style-simples.png',
   medio: '/style-medio.png',
   avancado: '/style-avancado.png',
+  fineline: '/style-fineline.png',
 }
 
 function StylePreview({ id, name }: { id: string; name: string }) {
@@ -300,6 +301,9 @@ export default function DecalPage() {
 
       setOutputUrl(data.outputUrl)
       setStatus('done')
+      setResultFlash(true)
+      setTimeout(() => setResultFlash(false), 1200)
+      playSuccessSound()
       if (credits !== null) setCredits(c => (c !== null ? c - 1 : c))
       loadHistory()
     } catch {
@@ -307,6 +311,29 @@ export default function DecalPage() {
       setStatus('error')
     }
   }
+
+  const [resultFlash, setResultFlash] = useState(false)
+
+  const playSuccessSound = useCallback(() => {
+    try {
+      const ctx = new AudioContext()
+      const notes = [523.25, 659.25, 783.99, 1046.5]
+      notes.forEach((freq, i) => {
+        const osc = ctx.createOscillator()
+        const gain = ctx.createGain()
+        osc.connect(gain)
+        gain.connect(ctx.destination)
+        osc.type = 'sine'
+        osc.frequency.value = freq
+        const t = ctx.currentTime + i * 0.13
+        gain.gain.setValueAtTime(0, t)
+        gain.gain.linearRampToValueAtTime(0.22, t + 0.04)
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.45)
+        osc.start(t)
+        osc.stop(t + 0.5)
+      })
+    } catch { /* browser blocked autoplay */ }
+  }, [])
 
   const generateAnother = () => {
     setStatus('idle')
@@ -468,6 +495,17 @@ export default function DecalPage() {
               onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f) }}
             />
 
+            {preview && (
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full flex items-center justify-center gap-2 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/30 hover:text-[#22c55e] transition-colors duration-200"
+                style={{ border: '1px dashed rgba(255,255,255,0.08)' }}
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Trocar imagem
+              </button>
+            )}
+
             {/* Estilo selecionado + botão gerar */}
             {file && (
               <div
@@ -558,8 +596,11 @@ export default function DecalPage() {
                   style={{
                     aspectRatio: resultAspect,
                     maxHeight: '500px',
-                    border: '1px solid rgba(34,197,94,0.3)',
-                    boxShadow: '0 0 30px rgba(34,197,94,0.08)',
+                    border: `1px solid ${resultFlash ? 'rgba(34,197,94,0.9)' : 'rgba(34,197,94,0.3)'}`,
+                    boxShadow: resultFlash
+                      ? '0 0 60px rgba(34,197,94,0.5), 0 0 120px rgba(34,197,94,0.2)'
+                      : '0 0 30px rgba(34,197,94,0.08)',
+                    transition: 'box-shadow 0.6s ease, border-color 0.6s ease',
                   }}
                 >
                   <div className="absolute top-2 left-2 w-6 h-6 border-t-2 border-l-2 border-[#22c55e] z-10 bracket-glow" />

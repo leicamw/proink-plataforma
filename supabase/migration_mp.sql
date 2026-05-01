@@ -1,0 +1,2 @@
+-- Nenhuma migração necessária: reutilizando stripe_subscription_id para armazenar o ID de assinatura do Mercado Pago
+-- Execute apenas se quiser renomear a coluna no futuro

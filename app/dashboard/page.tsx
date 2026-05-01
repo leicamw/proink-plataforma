@@ -3,8 +3,8 @@ import { UserButton } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getOrCreateProfile, getCreditsAvailable, getRecentDecals } from "@/lib/db/profiles";
-import { createCheckoutSession, createPortalSession } from "@/app/actions/stripe";
-import { STRIPE_PLANS } from "@/lib/stripe/plans";
+import { createCheckoutSession, createPortalSession } from "@/app/actions/mercadopago";
+import { MP_PLANS } from "@/lib/mercadopago/plans";
 import { NotifyButton } from "./_components/notify-button";
 
 /* ── Icons ─────────────────────────────────────────────────── */
@@ -379,7 +379,7 @@ export default async function DashboardPage() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {(["starter", "pro", "creator"] as const).map((plan) => {
-                  const config = STRIPE_PLANS[plan];
+                  const config = MP_PLANS[plan];
                   const isPro = plan === "pro";
                   return (
                     <form key={plan} action={createCheckoutSession.bind(null, plan)}>
@@ -433,7 +433,7 @@ export default async function DashboardPage() {
               <div>
                 <p className="text-[10px] uppercase tracking-[0.18em] text-white/30 mb-1">Assinatura ativa</p>
                 <p className="font-bebas text-xl tracking-[0.06em] text-white">
-                  Plano {STRIPE_PLANS[profile.plan as Exclude<typeof profile.plan, "free">]?.name}
+                  Plano {MP_PLANS[profile.plan as Exclude<typeof profile.plan, "free">]?.name}
                   <span className="ml-3 text-[#22c55e] neon-text-sm text-base">· {creditsAvailable} créditos restantes</span>
                 </p>
                 {profile.plan_expires_at && (

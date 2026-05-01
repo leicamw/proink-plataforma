@@ -1,13 +1,17 @@
 import { SignIn } from "@clerk/nextjs";
+import { Logo } from "@/app/_components/logo";
 
 export default function SignInPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#0a0a0a] px-4">
-      <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold tracking-tight text-white">
-          Pro <span className="text-[#22c55e]">Ink</span>
-        </h1>
-        <p className="mt-2 text-sm text-[#a3a3a3]">Entre na sua conta</p>
+      <div className="mb-8 flex flex-col items-center gap-3">
+        <Logo size={56} showText={false} />
+        <div className="text-center">
+          <h1 className="font-bebas text-3xl tracking-[0.05em] text-white">
+            Pro <span className="text-[#22c55e]">Ink</span>
+          </h1>
+          <p className="mt-1 text-sm text-[#a3a3a3]">Entre na sua conta</p>
+        </div>
       </div>
       <SignIn
         appearance={{

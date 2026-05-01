@@ -3,6 +3,7 @@ import Image from "next/image";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { ScrollReveal } from "./_components/scroll-reveal";
+import { Logo } from "./_components/logo";
 
 /* ── Inline SVG icons ───────────────────────────────────────── */
 
@@ -175,15 +176,7 @@ export default async function HomePage() {
         <div className="max-w-[1400px] mx-auto px-6 md:px-10 h-16 flex items-center justify-between">
 
           {/* Logo */}
-          <div className="flex items-center gap-3">
-            <span className="text-[#22c55e] neon-text-sm float"><CrosshairIcon size={26} /></span>
-            <div className="leading-none">
-              <div className="font-bebas text-[22px] tracking-[0.05em]">
-                Pro <span className="text-[#22c55e] neon-text-sm">Ink</span>
-              </div>
-              <div className="text-[8px] text-white/25 uppercase tracking-[0.22em]">Tattoo Platform</div>
-            </div>
-          </div>
+          <Logo size={38} />
 
           {/* Nav */}
           <nav className="hidden md:flex items-center gap-8">
@@ -950,15 +943,7 @@ export default async function HomePage() {
       <footer className="py-10 px-6 md:px-10" style={{ borderTop: "1px solid rgba(34,197,94,0.06)" }}>
         <div className="max-w-[1400px] mx-auto">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-8">
-            <div className="flex items-center gap-3">
-              <span className="text-[#22c55e]/60"><CrosshairIcon size={20} /></span>
-              <div className="leading-none">
-                <div className="font-bebas text-[20px] tracking-[0.05em]">
-                  Pro <span className="text-[#22c55e]">Ink</span>
-                </div>
-                <div className="text-[8px] text-white/20 uppercase tracking-[0.2em]">Tattoo Platform</div>
-              </div>
-            </div>
+            <Logo size={32} />
             <nav className="flex flex-wrap gap-6">
               {[
                 { label: "Plataforma", href: "#plataforma" },

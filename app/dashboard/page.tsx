@@ -3,6 +3,7 @@ import { UserButton } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getOrCreateProfile, getCreditsAvailable, getRecentDecals } from "@/lib/db/profiles";
+import { Logo } from "@/app/_components/logo";
 import { createCheckoutSession, createPortalSession } from "@/app/actions/mercadopago";
 import { MP_PLANS } from "@/lib/mercadopago/plans";
 import { NotifyButton } from "./_components/notify-button";
@@ -113,15 +114,7 @@ export default async function DashboardPage() {
         }}
       >
         <div className="max-w-[1600px] mx-auto px-6 md:px-10 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-[#22c55e] neon-text-sm float"><CrosshairIcon size={24} /></span>
-            <div className="leading-none">
-              <div className="font-bebas text-[20px] tracking-[0.05em]">
-                Pro <span className="text-[#22c55e] neon-text-sm">Ink</span>
-              </div>
-              <div className="text-[8px] text-white/25 uppercase tracking-[0.22em]">Tattoo Platform</div>
-            </div>
-          </div>
+          <Logo size={36} />
 
           <nav className="hidden md:flex items-center gap-7">
             <a href="#decalque" className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#22c55e] hover:text-[#22c55e] transition-colors duration-200">Decalque IA</a>

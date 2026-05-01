@@ -3,6 +3,7 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Logo } from '@/app/_components/logo'
 
 /* ── Icons ───────────────────────────────────────────────────── */
 
@@ -373,14 +374,8 @@ export default function DecalPage() {
         }}
       >
         <div className="max-w-[1400px] mx-auto px-6 md:px-10 h-16 flex items-center justify-between">
-          <Link href="/dashboard" className="flex items-center gap-3">
-            <span className="text-[#22c55e] neon-text-sm float"><CrosshairIcon size={22} /></span>
-            <div className="leading-none">
-              <div className="font-bebas text-[20px] tracking-[0.05em]">
-                Pro <span className="text-[#22c55e] neon-text-sm">Ink</span>
-              </div>
-              <div className="text-[8px] text-white/25 uppercase tracking-[0.22em]">Tattoo Platform</div>
-            </div>
+          <Link href="/dashboard">
+            <Logo size={34} />
           </Link>
 
           <div className="flex items-center gap-4">

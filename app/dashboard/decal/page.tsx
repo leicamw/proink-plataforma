@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState, useCallback, useEffect } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 
 /* ── Icons ───────────────────────────────────────────────────── */
@@ -51,14 +52,33 @@ function SparkleIcon() {
 
 type DecalStyleId = 'simples' | 'medio' | 'avancado' | 'fineline'
 
-// Placeholder — troque por <img src={`/styles/${id}.jpg`} .../> quando tiver as imagens
+const STYLE_IMAGES: Partial<Record<string, string>> = {
+  simples: '/style-simples.png',
+  medio: '/style-medio.png',
+}
+
 function StylePreview({ id, name }: { id: string; name: string }) {
+  const src = STYLE_IMAGES[id]
+
+  if (src) {
+    return (
+      <div className="w-full relative overflow-hidden" style={{ aspectRatio: '4/3' }}>
+        <Image
+          src={src}
+          alt={name}
+          fill
+          className="object-cover object-top"
+          sizes="300px"
+        />
+      </div>
+    )
+  }
+
   return (
     <div
       className="w-full relative overflow-hidden"
       style={{ aspectRatio: '4/3', background: 'rgba(255,255,255,0.02)' }}
     >
-      {/* Grade decorativa */}
       <div
         className="absolute inset-0"
         style={{
@@ -66,7 +86,6 @@ function StylePreview({ id, name }: { id: string; name: string }) {
           backgroundSize: '20px 20px',
         }}
       />
-      {/* Nome do estilo em ghost grande */}
       <div className="absolute inset-0 flex items-center justify-center">
         <span
           className="font-bebas select-none text-center leading-none px-2"
@@ -75,7 +94,6 @@ function StylePreview({ id, name }: { id: string; name: string }) {
           {name.toUpperCase()}
         </span>
       </div>
-      {/* Label de placeholder */}
       <div className="absolute bottom-2 left-0 right-0 flex justify-center">
         <span
           className="text-[7px] font-bold uppercase tracking-[0.2em] px-2 py-0.5"

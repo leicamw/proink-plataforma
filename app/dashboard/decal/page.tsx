@@ -62,12 +62,12 @@ function StylePreview({ id, name }: { id: string; name: string }) {
 
   if (src) {
     return (
-      <div className="w-full relative overflow-hidden" style={{ aspectRatio: '4/3' }}>
+      <div className="w-full relative overflow-hidden" style={{ aspectRatio: '3/2' }}>
         <Image
           src={src}
           alt={name}
           fill
-          className="object-cover object-top"
+          className="object-cover object-center"
           sizes="300px"
         />
       </div>

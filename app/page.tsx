@@ -297,13 +297,13 @@ export default async function HomePage() {
                 className="font-bebas leading-[0.88] uppercase"
                 style={{ fontSize: "clamp(4rem,9vw,9.5rem)" }}
               >
-                PROFISSIONAL.
+                PROFISSIONAL
               </h1>
             </div>
 
             {/* Sub */}
             <p className="hero-in-4 text-white/45 text-[15px] leading-relaxed max-w-[400px] mb-10">
-              Cursos exclusivos, IA para decalques e uma comunidade de tatuadores profissionais — tudo na Pro Ink.
+              Cursos exclusivos, IA para decalques e uma comunidade de tatuadores profissionais tudo na Pro Ink Academy.
             </p>
 
             {/* CTAs */}

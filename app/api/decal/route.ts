@@ -15,7 +15,7 @@ const OUTPUT_BUCKET = 'decal-outputs'
 
 /* ── Estilos de decalque ─────────────────────────────────────── */
 
-export const DECAL_STYLE_IDS = ['espectro', 'sombras', 'cinzel', 'fantasma'] as const
+export const DECAL_STYLE_IDS = ['simples', 'medio', 'avancado', 'fineline'] as const
 export type DecalStyleId = typeof DECAL_STYLE_IDS[number]
 
 const BASE_PROMPT = `Create a PROFESSIONAL TATTOO STENCIL directly from the input image.
@@ -84,21 +84,21 @@ Keep the result clean, readable, and suitable for thermal tattoo stencil printin
 The final result must be a high-contrast, line-only stencil that works as an accurate tracing guide and aligns precisely with the original image.`
 
 const STYLE_PROMPTS: Record<DecalStyleId, string> = {
-  espectro: BASE_PROMPT,
+  simples: BASE_PROMPT,
 
-  sombras: BASE_PROMPT + `
+  medio: BASE_PROMPT + `
 
-STYLE ADDITION — SOMBRAS:
+STYLE ADDITION — MÉDIO:
 In areas where the original image has clear shadow or depth, add fine evenly-spaced parallel hatching lines to indicate volume. Hatching must follow the surface curvature. Light areas remain completely white. All other rules above remain fully in effect.`,
 
-  cinzel: BASE_PROMPT + `
+  avancado: BASE_PROMPT + `
 
-STYLE ADDITION — CINZEL:
+STYLE ADDITION — AVANÇADO:
 In shadow and mid-tone areas, add fine crosshatch lines in the style of a traditional copper plate engraving. Light areas remain white. Dark areas use denser crosshatch. All crosshatch lines must be crisp, uniform, and directional. All other rules above remain fully in effect.`,
 
-  fantasma: BASE_PROMPT + `
+  fineline: BASE_PROMPT + `
 
-STYLE ADDITION — FANTASMA:
+STYLE ADDITION — FINE LINE:
 Use only the absolute minimum essential lines. Remove all secondary detail lines and internal marks, keeping only the primary silhouette and the most critical structural contours. The result must be extremely minimal, delicate, and almost ethereal. All other rules above remain fully in effect.`,
 }
 
@@ -152,7 +152,7 @@ export async function POST(req: NextRequest) {
   const rawStyle = formData.get('style') as string | null
   const style: DecalStyleId = DECAL_STYLE_IDS.includes(rawStyle as DecalStyleId)
     ? (rawStyle as DecalStyleId)
-    : 'espectro'
+    : 'simples'
 
   const imgW = parseInt(formData.get('imgW') as string || '0', 10)
   const imgH = parseInt(formData.get('imgH') as string || '0', 10)

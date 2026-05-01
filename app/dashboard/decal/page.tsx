@@ -49,7 +49,7 @@ function SparkleIcon() {
 
 /* ── Estilos de decalque ─────────────────────────────────────── */
 
-type DecalStyleId = 'espectro' | 'sombras' | 'cinzel' | 'fantasma'
+type DecalStyleId = 'simples' | 'medio' | 'avancado' | 'fineline'
 
 // Placeholder — troque por <img src={`/styles/${id}.jpg`} .../> quando tiver as imagens
 function StylePreview({ id, name }: { id: string; name: string }) {
@@ -98,39 +98,39 @@ interface DecalStyle {
 
 const DECAL_STYLES: DecalStyle[] = [
   {
-    id: 'espectro',
-    name: 'Espectro',
-    tagline: 'Linhas puras de contorno',
-    description: 'Stencil clássico com linhas de contorno limpas e precisas. Ideal para qualquer estilo.',
+    id: 'simples',
+    name: 'Simples',
+    tagline: 'Linhas principais com mínima indicação de sombra',
+    description: 'Linhas principais com mínima indicação de sombra',
     preview: (
-      <StylePreview id="espectro" name="Espectro" />
+      <StylePreview id="simples" name="Simples" />
     ),
   },
   {
-    id: 'sombras',
-    name: 'Sombras',
-    tagline: 'Profundidade com hachura fina',
-    description: 'Linhas de contorno combinadas com hachura direcional nas áreas de sombra. Dá volume ao design.',
+    id: 'medio',
+    name: 'Médio',
+    tagline: 'Linhas com leve marcação nas sombras',
+    description: 'Linhas com leve marcação nas sombras',
     preview: (
-      <StylePreview id="sombras" name="Sombras" />
+      <StylePreview id="medio" name="Médio" />
     ),
   },
   {
-    id: 'cinzel',
-    name: 'Cinzel',
-    tagline: 'Entalhado em chapa de cobre',
-    description: 'Reticulado cruzado estilo gravura em metal. Cada tom é construído com linhas direcionais precisas.',
+    id: 'avancado',
+    name: 'Avançado',
+    tagline: 'Alto nível de detalhe com textura e profundidade',
+    description: 'Alto nível de detalhe com textura e profundidade',
     preview: (
-      <StylePreview id="cinzel" name="Cinzel" />
+      <StylePreview id="avancado" name="Avançado" />
     ),
   },
   {
-    id: 'fantasma',
-    name: 'Fantasma',
-    tagline: 'Ultra-minimalista e etéreo',
-    description: 'Apenas as linhas mais essenciais, na espessura mínima possível. Perfeito para tatuagens delicadas.',
+    id: 'fineline',
+    name: 'Fine Line',
+    tagline: 'Traço fino e delicado para trabalhos minimalistas',
+    description: 'Traço fino e delicado para trabalhos minimalistas',
     preview: (
-      <StylePreview id="fantasma" name="Fantasma" />
+      <StylePreview id="fineline" name="Fine Line" />
     ),
   },
 ]
@@ -214,7 +214,7 @@ export default function DecalPage() {
   const [file, setFile] = useState<File | null>(null)
   const [imgDims, setImgDims] = useState<{ w: number; h: number } | null>(null)
   const [isDragging, setIsDragging] = useState(false)
-  const [selectedStyle, setSelectedStyle] = useState<DecalStyleId>('espectro')
+  const [selectedStyle, setSelectedStyle] = useState<DecalStyleId>('simples')
   const [status, setStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [outputUrl, setOutputUrl] = useState<string | null>(null)
   const [errorMsg, setErrorMsg] = useState('')

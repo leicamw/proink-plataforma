@@ -77,14 +77,31 @@ export async function POST(req: NextRequest) {
       const payment = await paymentClient.get({ id: Number(event.data.id) })
 
       const externalRef = payment.external_reference ?? ''
-      const [clerkUserId, plan] = externalRef.split('|') as [string, Plan]
+      const parts = externalRef.split('|')
+      const clerkUserId = parts[0]
+      const plan = parts[1] as Plan
+      const isTest = parts[2] === 'test'
+
       if (!clerkUserId || !plan || plan === 'free') return NextResponse.json({ received: true })
-      const paidPlan = plan as Exclude<Plan, 'free'>
 
       if (payment.status === 'approved') {
-        await assignPlan(clerkUserId, paidPlan, String(payment.id))
+        if (isTest) {
+          // Teste: apenas adiciona 10 créditos, não muda o plano
+          await supabaseAdmin
+            .from('profiles')
+            .update({ credits_total: 10, credits_used: 0 } as any)
+            .eq('clerk_user_id', clerkUserId)
+          await supabaseAdmin.from('credit_transactions').insert({
+            clerk_user_id: clerkUserId,
+            type: 'credit',
+            amount: 10,
+            description: 'Teste de pagamento — 10 créditos',
+          })
+        } else {
+          await assignPlan(clerkUserId, plan as Exclude<Plan, 'free'>, String(payment.id))
+        }
       } else if (payment.status === 'refunded' || payment.status === 'cancelled') {
-        await resetToFree(clerkUserId)
+        if (!isTest) await resetToFree(clerkUserId)
       }
     }
   } catch (err) {

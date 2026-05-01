@@ -202,9 +202,13 @@ export async function POST(req: NextRequest) {
       .update({ status: 'failed' })
       .eq('id', job.id)
 
-    return NextResponse.json(
-      { error: err instanceof Error ? err.message : 'Falha ao gerar decalque.' },
-      { status: 500 }
-    )
+    const raw = err instanceof Error ? err.message : String(err)
+    const userMessage = raw.includes('预扣费') || raw.includes('额度')
+      ? 'Serviço temporariamente indisponível. Tente novamente em instantes.'
+      : raw.includes('rate limit') || raw.includes('429')
+      ? 'Muitas requisições simultâneas. Aguarde alguns segundos e tente novamente.'
+      : 'Falha ao gerar decalque. Tente novamente.'
+
+    return NextResponse.json({ error: userMessage }, { status: 500 })
   }
 }

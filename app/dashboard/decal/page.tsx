@@ -67,7 +67,7 @@ function StylePreview({ id, name }: { id: string; name: string }) {
           src={src}
           alt={name}
           fill
-          className="object-cover object-center"
+          className="object-cover" style={{ objectPosition: '50% 35%' }}
           sizes="300px"
         />
       </div>

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { PreApproval } from 'mercadopago'
+import { Payment } from 'mercadopago'
 import { mpClient } from '@/lib/mercadopago'
 import { MP_PLANS } from '@/lib/mercadopago/plans'
 import { supabaseAdmin } from '@/lib/supabase'
@@ -72,18 +72,18 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    if (event.type === 'subscription_preapproval') {
-      const preApproval = new PreApproval(mpClient)
-      const sub = await preApproval.get({ id: event.data.id })
+    if (event.type === 'payment') {
+      const paymentClient = new Payment(mpClient)
+      const payment = await paymentClient.get({ id: Number(event.data.id) })
 
-      const externalRef = sub.external_reference ?? ''
+      const externalRef = payment.external_reference ?? ''
       const [clerkUserId, plan] = externalRef.split('|') as [string, Plan]
       if (!clerkUserId || !plan || plan === 'free') return NextResponse.json({ received: true })
       const paidPlan = plan as Exclude<Plan, 'free'>
 
-      if (sub.status === 'authorized') {
-        await assignPlan(clerkUserId, paidPlan, String(sub.id))
-      } else if (sub.status === 'cancelled') {
+      if (payment.status === 'approved') {
+        await assignPlan(clerkUserId, paidPlan, String(payment.id))
+      } else if (payment.status === 'refunded' || payment.status === 'cancelled') {
         await resetToFree(clerkUserId)
       }
     }

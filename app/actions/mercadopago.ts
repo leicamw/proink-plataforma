@@ -2,7 +2,7 @@
 
 import { auth, currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
-import { PreApproval } from 'mercadopago'
+import { Preference } from 'mercadopago'
 import { mpClient } from '@/lib/mercadopago'
 import { MP_PLANS } from '@/lib/mercadopago/plans'
 import { getOrCreateProfile } from '@/lib/db/profiles'
@@ -22,20 +22,29 @@ export async function createCheckoutSession(plan: CheckoutPlan) {
   const planConfig = MP_PLANS[plan]
   const appUrl = process.env.NEXT_PUBLIC_APP_URL!
 
-  const preApproval = new PreApproval(mpClient)
-  const response = await preApproval.create({
+  const preference = new Preference(mpClient)
+  const response = await preference.create({
     body: {
-      reason: `Pro Ink Academy — Plano ${planConfig.name}`,
-      external_reference: `${userId}|${plan}`,
-      payer_email: email ?? undefined,
-      auto_recurring: {
-        frequency: 1,
-        frequency_type: 'months',
-        transaction_amount: planConfig.amount,
+      items: [{
+        id: plan,
+        title: `Pro Ink Academy — Plano ${planConfig.name}`,
+        description: `${planConfig.credits} créditos para geração de decalques IA`,
+        quantity: 1,
+        unit_price: planConfig.amount,
         currency_id: 'BRL',
+      }],
+      payer: { email: email ?? undefined },
+      external_reference: `${userId}|${plan}`,
+      back_urls: {
+        success: `${appUrl}/dashboard?success=true`,
+        failure: `${appUrl}/dashboard?canceled=true`,
+        pending: `${appUrl}/dashboard?pending=true`,
       },
-      back_url: `${appUrl}/dashboard?success=true`,
-      status: 'pending',
+      auto_return: 'approved',
+      payment_methods: {
+        installments: 1,
+      },
+      statement_descriptor: 'PRO INK ACADEMY',
     },
   })
 
@@ -43,5 +52,5 @@ export async function createCheckoutSession(plan: CheckoutPlan) {
 }
 
 export async function createPortalSession() {
-  redirect('https://www.mercadopago.com.br/subscriptions')
+  redirect('https://www.mercadopago.com.br/activities')
 }

@@ -44,7 +44,6 @@ const COURSES = [
     id: 1,
     style: "BLACKWORK",
     title: "Avançado",
-    instructor: "André Lima",
     duration: "12h",
     topN: 1,
     bg: "#060606",
@@ -56,11 +55,11 @@ const COURSES = [
     id: 2,
     style: "FINELINE",
     title: "Floral",
-    instructor: "Camila Torres",
     duration: "8h",
     topN: 2,
     bg: "#04080a",
     accentColor: "#34d399",
+    image: "/course-fineline.jpg",
     pattern: "radial-gradient(circle,rgba(34,197,94,0.07) 1px,transparent 1px)",
     patternSize: "18px 18px",
   },
@@ -68,7 +67,6 @@ const COURSES = [
     id: 3,
     style: "REALISMO",
     title: "P&B",
-    instructor: "Rafael Souza",
     duration: "20h",
     topN: 3,
     bg: "#080606",
@@ -80,7 +78,6 @@ const COURSES = [
     id: 4,
     style: "AQUARELA",
     title: "Moderna",
-    instructor: "Juliana Pires",
     duration: "10h",
     bg: "#050a08",
     accentColor: "#4ade80",
@@ -91,7 +88,6 @@ const COURSES = [
     id: 5,
     style: "PONTILHISMO",
     title: "Técnico",
-    instructor: "Marcos Alves",
     duration: "6h",
     bg: "#060608",
     accentColor: "#22c55e",
@@ -102,7 +98,6 @@ const COURSES = [
     id: 6,
     style: "OLD SCHOOL",
     title: "Clássico",
-    instructor: "Bruno Neves",
     duration: "15h",
     bg: "#09070a",
     accentColor: "#a3e635",
@@ -464,14 +459,21 @@ export default async function HomePage() {
                     background: c.bg,
                   }}
                 >
-                  {/* CSS pattern */}
-                  <div
-                    className="absolute inset-0"
-                    style={{
-                      backgroundImage: c.pattern,
-                      backgroundSize: c.patternSize,
-                    }}
-                  />
+                  {/* Imagem de capa (se disponível) ou padrão CSS */}
+                  {'image' in c && c.image ? (
+                    <div
+                      className="absolute inset-0 bg-cover bg-center"
+                      style={{ backgroundImage: `url(${c.image})` }}
+                    />
+                  ) : (
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        backgroundImage: c.pattern,
+                        backgroundSize: c.patternSize,
+                      }}
+                    />
+                  )}
 
                   {/* Ambient color wash */}
                   <div
@@ -519,8 +521,7 @@ export default async function HomePage() {
                         {c.style}
                       </div>
                       <div className="text-white font-semibold text-[11px] leading-tight mb-1">{c.title}</div>
-                      <div className="flex justify-between">
-                        <span className="text-[9px] text-white/35">{c.instructor}</span>
+                      <div className="flex justify-end">
                         <span className="text-[9px] text-white/35">{c.duration}</span>
                       </div>
                     </div>

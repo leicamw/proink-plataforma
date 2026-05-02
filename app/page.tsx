@@ -3,6 +3,7 @@ import Image from "next/image";
 import finelineImg from "@/public/course-fineline.jpg";
 import aquarelaImg from "@/public/course-aquarela.jpg";
 import pontilhismoImg from "@/public/course-pontilhismo.jpg";
+import oldschoolImg from "@/public/course-oldschool.jpg";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { ScrollReveal } from "./_components/scroll-reveal";
@@ -118,6 +119,7 @@ const COURSES: Course[] = [
     duration: "15h",
     bg: "#09070a",
     accentColor: "#a3e635",
+    image: oldschoolImg.src,
     pattern: "repeating-linear-gradient(0deg,rgba(255,255,255,0.014) 0,rgba(255,255,255,0.014) 1px,transparent 0,transparent 24px)",
     patternSize: "100% 24px",
   },

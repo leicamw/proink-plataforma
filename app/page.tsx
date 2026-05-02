@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import finelineImg from "@/public/course-fineline.jpg";
 import aquarelaImg from "@/public/course-aquarela.jpg";
+import pontilhismoImg from "@/public/course-pontilhismo.jpg";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { ScrollReveal } from "./_components/scroll-reveal";
@@ -106,6 +107,7 @@ const COURSES: Course[] = [
     duration: "6h",
     bg: "#060608",
     accentColor: "#22c55e",
+    image: pontilhismoImg.src,
     pattern: "radial-gradient(circle,rgba(34,197,94,0.09) 1.5px,transparent 1.5px)",
     patternSize: "24px 24px",
   },

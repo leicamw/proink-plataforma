@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import finelineImg from "@/public/course-fineline.jpg";
+import aquarelaImg from "@/public/course-aquarela.jpg";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { ScrollReveal } from "./_components/scroll-reveal";
@@ -95,6 +96,7 @@ const COURSES: Course[] = [
     duration: "10h",
     bg: "#050a08",
     accentColor: "#4ade80",
+    image: aquarelaImg.src,
     pattern: "radial-gradient(ellipse 80% 60% at 70% 40%,rgba(34,197,94,0.1) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 20% 70%,rgba(16,185,129,0.08) 0%,transparent 50%)",
   },
   {
@@ -626,10 +628,10 @@ export default async function HomePage() {
               <ScrollReveal delay={160}>
                 <div className="grid grid-cols-2 gap-3 mb-8">
                   {[
-                    { name: "Espectro", desc: "Linhas puras de contorno" },
-                    { name: "Sombras", desc: "Profundidade com hachura" },
-                    { name: "Cinzel", desc: "Entalhado em chapa de cobre" },
-                    { name: "Fantasma", desc: "Ultra-minimalista e etéreo" },
+                    { name: "Simples", desc: "Linhas limpas, alto contraste" },
+                    { name: "Médio", desc: "Hachura moderada, leve sombreado" },
+                    { name: "Avançado", desc: "Crosshatch, sombreado detalhado" },
+                    { name: "Fine Line", desc: "Traço ultra-fino, leveza máxima" },
                   ].map((s) => (
                     <div key={s.name}
                       className="px-4 py-3"
@@ -680,10 +682,10 @@ export default async function HomePage() {
                     <p className="text-[9px] text-white/25 uppercase tracking-[0.2em] mb-2">Estilo do decalque</p>
                     <div className="grid grid-cols-2 gap-2">
                       {[
-                        { name: "Espectro", active: true },
-                        { name: "Sombras", active: false },
-                        { name: "Cinzel", active: false },
-                        { name: "Fantasma", active: false },
+                        { name: "Simples", active: true },
+                        { name: "Médio", active: false },
+                        { name: "Avançado", active: false },
+                        { name: "Fine Line", active: false },
                       ].map(s => (
                         <div key={s.name}
                           className="px-3 py-2 text-[10px] font-semibold"

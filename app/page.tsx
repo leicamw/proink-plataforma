@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import blackworkImg from "@/public/course-blackwork.jpg";
 import finelineImg from "@/public/course-fineline.jpg";
 import aquarelaImg from "@/public/course-aquarela.jpg";
 import pontilhismoImg from "@/public/course-pontilhismo.jpg";
@@ -65,6 +66,7 @@ const COURSES: Course[] = [
     topN: 1,
     bg: "#060606",
     accentColor: "#22c55e",
+    image: blackworkImg.src,
     pattern: "repeating-linear-gradient(45deg,rgba(255,255,255,0.018) 0,rgba(255,255,255,0.018) 1px,transparent 0,transparent 50%)",
     patternSize: "14px 14px",
   },

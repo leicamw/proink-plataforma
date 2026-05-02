@@ -1,11 +1,6 @@
 import { NextRequest } from 'next/server'
 import OpenAI from 'openai'
 
-const piapi = new OpenAI({
-  apiKey: process.env.PIAPI_API_KEY!,
-  baseURL: 'https://api.piapi.ai/v1',
-})
-
 const SYSTEM_PROMPT = `Você é o assistente virtual da Pro Ink Academy, uma plataforma exclusiva para tatuadores profissionais. Responda sempre em português brasileiro, de forma clara, direta e amigável.
 
 ## Sobre a Pro Ink Academy
@@ -51,6 +46,11 @@ A Pro Ink Academy é uma plataforma que oferece cursos de tatuagem e ferramentas
 export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json()
+
+    const piapi = new OpenAI({
+      apiKey: process.env.PIAPI_API_KEY!,
+      baseURL: 'https://api.piapi.ai/v1',
+    })
 
     const stream = await piapi.chat.completions.create({
       model: 'gpt-4o-mini',

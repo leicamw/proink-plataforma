@@ -39,7 +39,20 @@ function LockIcon({ size = 18 }: { size?: number }) {
 
 /* ── Course thumbnail data ──────────────────────────────────── */
 
-const COURSES = [
+type Course = {
+  id: number
+  style: string
+  title: string
+  duration: string
+  topN?: number
+  bg: string
+  accentColor: string
+  image?: string
+  pattern: string
+  patternSize?: string
+}
+
+const COURSES: Course[] = [
   {
     id: 1,
     style: "BLACKWORK",
@@ -82,7 +95,6 @@ const COURSES = [
     bg: "#050a08",
     accentColor: "#4ade80",
     pattern: "radial-gradient(ellipse 80% 60% at 70% 40%,rgba(34,197,94,0.1) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 20% 70%,rgba(16,185,129,0.08) 0%,transparent 50%)",
-    patternSize: undefined,
   },
   {
     id: 5,
@@ -460,10 +472,10 @@ export default async function HomePage() {
                   }}
                 >
                   {/* Imagem de capa (se disponível) ou padrão CSS */}
-                  {'image' in c && c.image ? (
+                  {c.image ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
-                      src={c.image as string}
+                      src={c.image}
                       alt={c.style}
                       className="absolute inset-0 w-full h-full object-cover object-center"
                     />

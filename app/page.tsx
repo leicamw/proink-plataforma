@@ -461,12 +461,11 @@ export default async function HomePage() {
                 >
                   {/* Imagem de capa (se disponível) ou padrão CSS */}
                   {'image' in c && c.image ? (
-                    <Image
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
                       src={c.image as string}
                       alt={c.style}
-                      fill
-                      className="object-cover object-center"
-                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 17vw"
+                      className="absolute inset-0 w-full h-full object-cover object-center"
                     />
                   ) : (
                     <div
@@ -618,7 +617,7 @@ export default async function HomePage() {
                     { name: "Sombras", desc: "Profundidade com hachura" },
                     { name: "Cinzel", desc: "Entalhado em chapa de cobre" },
                     { name: "Fantasma", desc: "Ultra-minimalista e etéreo" },
-                  ].map((s, i) => (
+                  ].map((s) => (
                     <div key={s.name}
                       className="px-4 py-3"
                       style={{

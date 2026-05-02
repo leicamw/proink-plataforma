@@ -461,9 +461,12 @@ export default async function HomePage() {
                 >
                   {/* Imagem de capa (se disponível) ou padrão CSS */}
                   {'image' in c && c.image ? (
-                    <div
-                      className="absolute inset-0 bg-cover bg-center"
-                      style={{ backgroundImage: `url(${c.image})` }}
+                    <Image
+                      src={c.image as string}
+                      alt={c.style}
+                      fill
+                      className="object-cover object-center"
+                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 17vw"
                     />
                   ) : (
                     <div
@@ -530,7 +533,7 @@ export default async function HomePage() {
                   {/* Lock overlay */}
                   <div
                     className="absolute inset-0 flex flex-col items-center justify-center gap-2"
-                    style={{ background: "rgba(0,0,0,0.52)" }}
+                    style={{ background: "rgba(0,0,0,0.45)" }}
                   >
                     <span style={{ color: "rgba(34,197,94,0.5)" }}><LockIcon size={22} /></span>
                     <span

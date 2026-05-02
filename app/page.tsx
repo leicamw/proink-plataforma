@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import finelineImg from "@/public/course-fineline.jpg";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { ScrollReveal } from "./_components/scroll-reveal";
@@ -72,7 +73,7 @@ const COURSES: Course[] = [
     topN: 2,
     bg: "#04080a",
     accentColor: "#34d399",
-    image: "/course-fineline.jpg",
+    image: finelineImg.src,
     pattern: "radial-gradient(circle,rgba(34,197,94,0.07) 1px,transparent 1px)",
     patternSize: "18px 18px",
   },
